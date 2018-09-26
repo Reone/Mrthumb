@@ -69,25 +69,6 @@ public class NiceVideoPlayer extends FrameLayout
     public static final int STATE_COMPLETED = 7;
 
     /**
-     * 普通模式
-     **/
-    public static final int MODE_NORMAL = 10;
-
-    /**
-     * 全屏模式
-     **/
-    public static final int MODE_FULL_SCREEN = 11;
-    /**
-     * 小窗口模式
-     **/
-    public static final int MODE_TINY_WINDOW = 12;
-
-    /**
-     * 普通控制器模式
-     **/
-    public static final int MODE_NORMAL_CTRL = 13;
-
-    /**
      * IjkPlayer
      **/
     public static final int TYPE_IJK = 111;
@@ -269,22 +250,16 @@ public class NiceVideoPlayer extends FrameLayout
         }
         mUrl = url;
         mHeaders = headers;
-        mCurrentState = STATE_ERROR;
-        if (mController != null) {
-            mController.onPlayStateChanged(mCurrentState);
-        }
     }
 
     private void initMediaMedataRetriever(final String url, final Map<String, String> headers) {
         try {
             if (TextUtils.isEmpty(url) || mMediaPlayer == null || mController == null) return;
-            if (mController.getThumbnailWidth() <= 0 || mController.getThumbnailHeight() <= 0)
-                return;
             if (thumbnailBuffer == null) {
                 thumbnailBuffer = new ThumbnailBuffer(100);
             }
             thumbnailBuffer.setMediaMedataRetriever(mmr, mMediaPlayer.getDuration());
-            thumbnailBuffer.execute(url, headers, mController.getThumbnailWidth(), mController.getThumbnailHeight());
+            thumbnailBuffer.execute(url, headers, 16, 9);
         } catch (Exception e) {
             e.printStackTrace();
             LogUtil.d("initMediaMedataRetriever ——> e" + e.getMessage());
@@ -295,7 +270,6 @@ public class NiceVideoPlayer extends FrameLayout
         if (controller != null) {
             mController = controller;
             mController.reset();
-            mController.setNiceVideoPlayer(this);
             mController.onPlayStateChanged(mCurrentState);
         }
     }

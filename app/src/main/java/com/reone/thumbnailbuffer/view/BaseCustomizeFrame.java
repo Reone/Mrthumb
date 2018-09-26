@@ -12,17 +12,16 @@ import butterknife.ButterKnife;
 
 /**
  * Created by wangxingsheng on 2018/6/29.
- *
+ * <p>
  * 一般的自定义view可以直接继承此类
- *
  */
-public abstract class BaseCustomizeFrame extends FrameLayout implements BaseCustomize {
+public class BaseCustomizeFrame extends FrameLayout implements BaseCustomize {
     public BaseCustomizeFrame(@NonNull Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public BaseCustomizeFrame(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public BaseCustomizeFrame(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -36,5 +35,30 @@ public abstract class BaseCustomizeFrame extends FrameLayout implements BaseCust
             a.recycle();
         }
         initEventAndData();
+    }
+
+    @Override
+    public int getLayoutResource() {
+        return 0;
+    }
+
+    @Override
+    public int[] getStyleableResource() {
+        return new int[0];
+    }
+
+    @Override
+    public void inflateView() {
+
+    }
+
+    @Override
+    public void customAttr(TypedArray typedArray) {
+
+    }
+
+    @Override
+    public void initEventAndData() {
+
     }
 }

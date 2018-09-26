@@ -14,7 +14,37 @@
         <FrameLayout
             android:id="@+id/frame_video"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@android:color/black" />
+
+        <!-- Loading -->
+        <FrameLayout
+            android:id="@+id/video_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#40000000"
+            android:visibility="visible">
+
+            <ProgressBar
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:indeterminate="false"
+                android:indeterminateDrawable="@anim/rotating_anim_loading" />
+
+            <TextView
+                android:id="@+id/tv_err"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top"
+                android:layout_marginTop="20dp"
+                android:includeFontPadding="false"
+                android:text="视频播放错误~~"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <!-- 拖动时屏幕中央显示框 -->
         <FrameLayout
@@ -32,14 +62,14 @@
                 android:layout_marginTop="320dp">
                 <!-- 拖动预览图片 -->
                 <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/img_preview_full"
+                    android:id="@+id/img_preview"
                     android:layout_width="match_parent"
                     android:layout_height="384dp"
                     android:layout_gravity="top"
                     android:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/tv_preview_full"
+                    android:id="@+id/tv_preview"
                     android:layout_width="match_parent"
                     android:layout_height="224dp"
                     android:layout_gravity="bottom"
@@ -57,11 +87,12 @@
             android:layout_width="match_parent"
             android:layout_height="32dp"
             android:layout_gravity="bottom"
+            android:layout_marginBottom="3dp"
             android:background="@drawable/bottom_cover"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
             <!-- 播放暂停 -->
             <FrameLayout
                 android:layout_width="15dp"
@@ -99,7 +130,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/icon_zoom_in" />
+                android:src="@drawable/icon_zoom_out" />
         </LinearLayout>
 
     </com.reone.thumbnailbuffer.view.FiexedLayout>
