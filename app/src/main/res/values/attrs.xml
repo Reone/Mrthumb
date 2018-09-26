@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="VideoSeekBar">
+        <attr name="vsb_text_size" format="integer" />
+        <attr name="vsb_seek_bar_style" format="reference" />
+        <attr name="vsb_seek_bar_progress_height" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="FiexedLayout">
+        <attr name="demoHeight" format="integer" />
+        <attr name="demoWidth" format="integer" />
+        <attr name="standard" format="string" />
+    </declare-styleable>
+</resources>

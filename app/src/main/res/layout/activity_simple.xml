@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.reone.thumbnailbuffer.view.FiexedLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:demoHeight="9"
+        app:demoWidth="16"
+        app:standard="w">
+        <!-- 视频 -->
+        <FrameLayout
+            android:id="@+id/frame_video"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- 拖动时屏幕中央显示框 -->
+        <FrameLayout
+            android:id="@+id/frame_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#40000000"
+            android:visibility="gone">
+
+            <FrameLayout
+                android:layout_width="680dp"
+                android:layout_height="648dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="320dp">
+                <!-- 拖动预览图片 -->
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/img_preview_full"
+                    android:layout_width="match_parent"
+                    android:layout_height="384dp"
+                    android:layout_gravity="top"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_preview_full"
+                    android:layout_width="match_parent"
+                    android:layout_height="224dp"
+                    android:layout_gravity="bottom"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="00:00"
+                    android:textColor="#FFFFFF"
+                    android:textSize="26.67sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <!-- 底部控制栏 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bottom_cover"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+            <!-- 播放暂停 -->
+            <FrameLayout
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginRight="10dp">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/btn_play"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/icon_play" />
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/btn_pause"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/icon_pause"
+                    android:visibility="gone" />
+            </FrameLayout>
+            <!-- 拖动条 -->
+            <com.reone.thumbnailbuffer.view.VideoSeekBar
+                android:id="@+id/video_seek_bar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+            <!-- 缩小按钮 -->
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/btn_zoom_out"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon_zoom_in" />
+        </LinearLayout>
+
+    </com.reone.thumbnailbuffer.view.FiexedLayout>
+</FrameLayout>
