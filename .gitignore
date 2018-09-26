@@ -10,3 +10,4 @@
 gradle.properties
 gradlew
 gradlew.bat
+/.idea/vcs.xml
