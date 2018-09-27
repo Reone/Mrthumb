@@ -84,6 +84,43 @@ public class SimpleActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 显示缩略图
+     *
+     * @param position
+     */
+    private void showPreView(long position) {
+        tvPreview.setText(NiceUtil.formatTime(position));
+        //这里的隐藏是非常必要的。播放第二个视频的时候，初始状态它的缩略图view显示的是上一个视频的bitmap，而这个bitmap已经回收了
+        //在ImageView隐藏时不会出现问题，当获取到新的bitmap后再进行显示操作
+        imgPreview.setVisibility(View.GONE);
+        try {
+            Bitmap bitmap = videoPlayer.getFrameAtTime(position);
+            if (bitmap != null && !bitmap.isRecycled()) {
+                imgPreview.setImageBitmap(bitmap);
+                imgPreview.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (videoPlayer != null) {
+            videoPlayer.pause();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (videoPlayer != null && (videoPlayer.isBufferingPaused() || videoPlayer.isPaused())) {
+            videoPlayer.restart();
+        }
+    }
+
     private void initLogArea() {
         tvPlayerLogArea.setMovementMethod(ScrollingMovementMethod.getInstance());
     }
@@ -234,22 +271,6 @@ public class SimpleActivity extends AppCompatActivity {
         int offset = tvPlayerLogArea.getLineCount() * tvPlayerLogArea.getLineHeight();
         if (offset > tvPlayerLogArea.getHeight()) {
             tvPlayerLogArea.scrollTo(0, offset - tvPlayerLogArea.getHeight());
-        }
-    }
-
-    private void showPreView(long position) {
-        tvPreview.setText(NiceUtil.formatTime(position));
-        //这里的隐藏是非常必要的。播放第二个视频的时候，初始状态它的缩略图view显示的是上一个视频的bitmap，而这个bitmap已经回收了
-        //在ImageView隐藏时不会出现问题，当获取到新的bitmap后再进行显示操作
-        imgPreview.setVisibility(View.GONE);
-        try {
-            Bitmap bitmap = videoPlayer.getFrameAtTime(position);
-            if (bitmap != null && !bitmap.isRecycled()) {
-                imgPreview.setImageBitmap(bitmap);
-                imgPreview.setVisibility(View.VISIBLE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

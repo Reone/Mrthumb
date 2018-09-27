@@ -55,33 +55,36 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="#40000000"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
-            <FrameLayout
-                android:layout_width="680dp"
-                android:layout_height="648dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="320dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="40dp"
+                android:orientation="vertical">
                 <!-- 拖动预览图片 -->
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/img_preview"
-                    android:layout_width="match_parent"
-                    android:layout_height="384dp"
+                    android:layout_width="160dp"
+                    android:layout_height="90dp"
                     android:layout_gravity="top"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
                 <TextView
                     android:id="@+id/tv_preview"
                     android:layout_width="match_parent"
-                    android:layout_height="224dp"
-                    android:layout_gravity="bottom"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
                     android:gravity="center"
                     android:includeFontPadding="false"
                     android:text="00:00"
                     android:textColor="#FFFFFF"
                     android:textSize="26.67sp"
                     android:textStyle="bold" />
-            </FrameLayout>
+            </LinearLayout>
         </FrameLayout>
 
         <!-- 底部控制栏 -->
@@ -124,6 +127,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
+
             <!-- 缩小按钮 -->
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/btn_zoom_out"
@@ -132,7 +136,8 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/icon_zoom_out" />
+                android:src="@drawable/icon_zoom_out"
+                android:visibility="gone" />
         </LinearLayout>
 
     </com.reone.thumbnailbuffer.view.FiexedLayout>

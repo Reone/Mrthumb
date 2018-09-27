@@ -259,7 +259,7 @@ public class NiceVideoPlayer extends FrameLayout
                 thumbnailBuffer = new ThumbnailBuffer(100);
             }
             thumbnailBuffer.setMediaMedataRetriever(mmr, mMediaPlayer.getDuration());
-            thumbnailBuffer.execute(url, headers, 16, 9);
+            thumbnailBuffer.execute(url, headers, 320, 180);
         } catch (Exception e) {
             e.printStackTrace();
             LogUtil.d("initMediaMedataRetriever ——> e" + e.getMessage());
