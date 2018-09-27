@@ -27,23 +27,19 @@ public class Mrthumb {
     }
 
     public void buffer(String url, long videoDuration) {
-        this.buffer(url, null, videoDuration, Default.retrieverType, Default.count, Default.thumbnailWidth, Default.thumbnailHeight);
+        this.buffer(url, null, videoDuration, Default.RETRIEVER_TYPE, Default.COUNT, Default.THUMBNAIL_WIDTH, Default.THUMBNAIL_HEIGHT);
     }
 
     public void buffer(String url, long videoDuration, int count) {
-        this.buffer(url, null, videoDuration, Default.retrieverType, count, Default.thumbnailWidth, Default.thumbnailHeight);
+        this.buffer(url, null, videoDuration, Default.RETRIEVER_TYPE, count, Default.THUMBNAIL_WIDTH, Default.THUMBNAIL_HEIGHT);
     }
 
     public void buffer(String url, Map<String, String> headers, long videoDuration) {
-        this.buffer(url, headers, videoDuration, Default.retrieverType, Default.count, Default.thumbnailWidth, Default.thumbnailHeight);
+        this.buffer(url, headers, videoDuration, Default.RETRIEVER_TYPE, Default.COUNT, Default.THUMBNAIL_WIDTH, Default.THUMBNAIL_HEIGHT);
     }
 
     public void buffer(String url, Map<String, String> headers, long videoDuration, int count) {
-        this.buffer(url, headers, videoDuration, Default.retrieverType, count, Default.thumbnailWidth, Default.thumbnailHeight);
-    }
-
-    public void buffer(String url, Map<String, String> headers, long videoDuration, @RetrieverType int retrieverType, int count) {
-        this.buffer(url, headers, videoDuration, retrieverType, count, Default.thumbnailWidth, Default.thumbnailHeight);
+        this.buffer(url, headers, videoDuration, Default.RETRIEVER_TYPE, count, Default.THUMBNAIL_WIDTH, Default.THUMBNAIL_HEIGHT);
     }
 
     /**
@@ -87,10 +83,10 @@ public class Mrthumb {
         }
     }
 
-    private static class Default {
-        static int count = 100;
-        static int retrieverType = RetrieverType.RETRIEVER_FFMPEG;
-        static int thumbnailWidth = 320;
-        static int thumbnailHeight = 180;
+    public static class Default {
+        public static final int COUNT = 100;
+        public static final int RETRIEVER_TYPE = RetrieverType.RETRIEVER_FFMPEG;
+        public static final int THUMBNAIL_WIDTH = 320;
+        public static final int THUMBNAIL_HEIGHT = 180;
     }
 }

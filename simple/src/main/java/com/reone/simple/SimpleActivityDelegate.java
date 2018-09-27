@@ -16,7 +16,7 @@ import com.reone.simple.view.VideoSeekBar;
 
 import java.util.HashMap;
 
-import static com.reone.simple.SimpleActivity.testVideo;
+import static com.reone.simple.SimpleActivity.videoUrl;
 
 /**
  * Created by wangxingsheng on 2018/9/27.
@@ -109,7 +109,7 @@ public class SimpleActivityDelegate {
         videoPlayer.continueFromLastPosition(false);
         simpleActivity.frameVideo.removeAllViews();
         simpleActivity.frameVideo.addView(videoPlayer, FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-        videoPlayer.setUp(testVideo, new HashMap<String, String>());
+        videoPlayer.setUp(videoUrl, new HashMap<String, String>());
         simpleActivity.videoSeekBar.setSeekBarListener(new VideoSeekBar.SeekBarListener() {
             @Override
             public void onSeek(SeekBar seekBar) {

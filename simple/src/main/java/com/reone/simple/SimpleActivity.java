@@ -44,7 +44,7 @@ public class SimpleActivity extends AppCompatActivity {
     @BindView(R.id.video_loading)
     FrameLayout videoLoading;
 
-    protected static final String testVideo = "http://domhttp.kksmg.com/2018/05/23/ocj_800k_037c50e5c82010c7c57c9f1935462f9c.mp4";
+    protected static final String videoUrl = "http://domhttp.kksmg.com/2018/05/23/ocj_800k_037c50e5c82010c7c57c9f1935462f9c.mp4";
     private SimpleActivityDelegate delegate;
 
     @Override
@@ -66,9 +66,9 @@ public class SimpleActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onPlayStateChanged(int playState, long duration) {
+            public void onPlayStateChanged(int playState, long videoDuration) {
                 if (playState == NiceVideoPlayer.STATE_PREPARED) {
-                    Mrthumb.obtain().buffer(testVideo, duration, 100);
+                    Mrthumb.obtain().buffer(videoUrl, videoDuration, Mrthumb.Default.COUNT);
                 }
             }
         });
