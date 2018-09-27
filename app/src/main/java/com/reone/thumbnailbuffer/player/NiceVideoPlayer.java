@@ -1,7 +1,6 @@
 package com.reone.thumbnailbuffer.player;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
@@ -14,9 +13,6 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-import com.reone.mmrc.MediaMetadataRetrieverCompat;
-import com.reone.mmrc.thumbnail.ThumbnailBuffer;
 
 import java.util.Map;
 
@@ -94,8 +90,6 @@ public class NiceVideoPlayer extends FrameLayout
     private boolean continueFromLastPosition = true;
     private boolean defaultMute = true;
     private long skipToPosition;
-    private MediaMetadataRetrieverCompat mmr;
-    private ThumbnailBuffer thumbnailBuffer = new ThumbnailBuffer(100);
     private IMediaPlayer.OnPreparedListener mOnPreparedListener
             = new IMediaPlayer.OnPreparedListener() {
         @Override
@@ -170,7 +164,6 @@ public class NiceVideoPlayer extends FrameLayout
             if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                 // 播放器开始渲染
                 mCurrentState = STATE_PLAYING;
-                initMediaMedataRetriever(mUrl, mHeaders);
                 if (mController != null) {
                     mController.onPlayStateChanged(mCurrentState);
                 }
@@ -252,42 +245,12 @@ public class NiceVideoPlayer extends FrameLayout
         mHeaders = headers;
     }
 
-    private void initMediaMedataRetriever(final String url, final Map<String, String> headers) {
-        try {
-            if (TextUtils.isEmpty(url) || mMediaPlayer == null || mController == null) return;
-            if (thumbnailBuffer == null) {
-                thumbnailBuffer = new ThumbnailBuffer(100);
-            }
-            thumbnailBuffer.setMediaMedataRetriever(mmr, mMediaPlayer.getDuration());
-            thumbnailBuffer.execute(url, headers, 320, 180);
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogUtil.d("initMediaMedataRetriever ——> e" + e.getMessage());
-        }
-    }
-
     public void setController(NiceVideoPlayerController controller) {
         if (controller != null) {
             mController = controller;
             mController.reset();
             mController.onPlayStateChanged(mCurrentState);
         }
-    }
-
-    /**
-     * 获取时间点的缩略图
-     *
-     * @param time 单位毫秒
-     * @return 缩略图
-     */
-    @Override
-    public Bitmap getFrameAtTime(long time) {
-        if (mMediaPlayer == null) return null;
-        LogUtil.d("getFrameAtTime at time:" + time + " duration:" + mMediaPlayer.getDuration());
-        if (thumbnailBuffer == null) {
-            return null;
-        }
-        return thumbnailBuffer.getThumbnail((float) time / mMediaPlayer.getDuration());
     }
 
     /**
@@ -567,17 +530,10 @@ public class NiceVideoPlayer extends FrameLayout
             switch (mPlayerType) {
                 case TYPE_NATIVE:
                     mMediaPlayer = new AndroidMediaPlayer();
-                    mmr = new MediaMetadataRetrieverCompat(MediaMetadataRetrieverCompat.RETRIEVER_ANDROID);
                     break;
                 case TYPE_IJK:
                 default:
                     mMediaPlayer = new IjkMediaPlayer();
-                    mmr = new MediaMetadataRetrieverCompat(MediaMetadataRetrieverCompat.RETRIEVER_FFMPEG);
-//                    ((IjkMediaPlayer)mMediaPlayer).setOption(1, "analyzemaxduration", 100L);
-//                    ((IjkMediaPlayer)mMediaPlayer).setOption(1, "probesize", 10240L);
-//                    ((IjkMediaPlayer)mMediaPlayer).setOption(1, "flush_packets", 1L);
-//                    ((IjkMediaPlayer)mMediaPlayer).setOption(4, "packet-buffering", 0L);
-//                    ((IjkMediaPlayer)mMediaPlayer).setOption(4, "framedrop", 1L);
                     break;
             }
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -676,14 +632,6 @@ public class NiceVideoPlayer extends FrameLayout
             mSurfaceTexture.release();
             mSurfaceTexture = null;
         }
-        if (thumbnailBuffer != null) {
-            thumbnailBuffer.release();
-            thumbnailBuffer = null;
-        }
-        if (mmr != null) {
-            mmr.release();
-            mmr = null;
-        }
         mCurrentState = STATE_IDLE;
         if (mController != null) {
             mController.onPlayStateChanged(mCurrentState);
@@ -747,6 +695,6 @@ public class NiceVideoPlayer extends FrameLayout
             mController.reset();
         }
         mContainer.removeView(mTextureView);
-        releasePlayerTask = new ReleasePlayerTask(mAudioManager, mMediaPlayer, mSurfaceTexture, mSurface, thumbnailBuffer, mmr).execute();
+        releasePlayerTask = new ReleasePlayerTask(mAudioManager, mMediaPlayer, mSurfaceTexture, mSurface).execute();
     }
 }

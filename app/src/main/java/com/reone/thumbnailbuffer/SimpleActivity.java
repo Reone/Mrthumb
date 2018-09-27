@@ -12,7 +12,10 @@ import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.reone.mmrc.MediaMetadataRetrieverCompat;
+import com.reone.mmrc.thumbnail.ThumbnailBuffer;
 import com.reone.talklibrary.TalkApp;
+import com.reone.thumbnailbuffer.player.LogUtil;
 import com.reone.thumbnailbuffer.player.NiceUtil;
 import com.reone.thumbnailbuffer.player.NiceVideoPlayer;
 import com.reone.thumbnailbuffer.player.NiceVideoPlayerController;
@@ -54,6 +57,7 @@ public class SimpleActivity extends AppCompatActivity {
 
     private NiceVideoPlayer videoPlayer;
     private static final String testVideo = "http://domhttp.kksmg.com/2018/05/23/ocj_800k_037c50e5c82010c7c57c9f1935462f9c.mp4";
+    private ThumbnailBuffer thumbnailBuffer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +97,8 @@ public class SimpleActivity extends AppCompatActivity {
         tvPreview.setText(NiceUtil.formatTime(position));
         //这里的隐藏是非常必要的。播放第二个视频的时候，初始状态它的缩略图view显示的是上一个视频的bitmap，而这个bitmap已经回收了
         //在ImageView隐藏时不会出现问题，当获取到新的bitmap后再进行显示操作
-        imgPreview.setVisibility(View.GONE);
         try {
-            Bitmap bitmap = videoPlayer.getFrameAtTime(position);
+            Bitmap bitmap = getFrameAtTime(position);
             if (bitmap != null && !bitmap.isRecycled()) {
                 imgPreview.setImageBitmap(bitmap);
                 imgPreview.setVisibility(View.VISIBLE);
@@ -144,6 +147,7 @@ public class SimpleActivity extends AppCompatActivity {
                         startUpdateProgressTimer();
                         break;
                     case NiceVideoPlayer.STATE_PREPARED:
+                        initMediaMedataRetriever(testVideo);
                         videoLoading.setVisibility(GONE);
                         startUpdateProgressTimer();
                         break;
@@ -232,6 +236,36 @@ public class SimpleActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 获取时间点的缩略图
+     *
+     * @param time 单位毫秒
+     * @return 缩略图
+     */
+    public Bitmap getFrameAtTime(long time) {
+        if (videoPlayer == null) return null;
+        LogUtil.d("getFrameAtTime at time:" + time + " duration:" + videoPlayer.getDuration());
+        if (thumbnailBuffer == null) {
+            return null;
+        }
+        return thumbnailBuffer.getThumbnail((float) time / videoPlayer.getDuration());
+    }
+
+    private void initMediaMedataRetriever(String testVideo) {
+        try {
+            if (TextUtils.isEmpty(testVideo) || videoPlayer == null) return;
+            if (thumbnailBuffer == null) {
+                thumbnailBuffer = new ThumbnailBuffer(100);
+            }
+            MediaMetadataRetrieverCompat mmr = new MediaMetadataRetrieverCompat(MediaMetadataRetrieverCompat.RETRIEVER_FFMPEG);
+            thumbnailBuffer.setMediaMedataRetriever(mmr, videoPlayer.getDuration());
+            thumbnailBuffer.execute(testVideo, null, 320, 180);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtil.d("initMediaMedataRetriever ——> e" + e.getMessage());
+        }
+    }
+
     private void playStateLog(@PlayerState int playState) {
         StringBuilder sb = new StringBuilder();
         if (!TextUtils.isEmpty(tvPlayerLogArea.getText())) {
@@ -279,6 +313,9 @@ public class SimpleActivity extends AppCompatActivity {
         super.onDestroy();
         if (videoPlayer != null) {
             videoPlayer.releaseInBackground();
+        }
+        if (thumbnailBuffer != null) {
+            thumbnailBuffer.release();
         }
     }
 
