@@ -9,9 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.reone.mmrc.RetrieverType;
-import com.reone.mmrc.retriever.MediaMetadataRetrieverCompat;
-import com.reone.mmrc.thumbnail.ThumbnailBuffer;
+import com.reone.mmrc.Mrthumb;
 import com.reone.thumbnailbuffer.player.NiceVideoPlayer;
 import com.reone.thumbnailbuffer.view.VideoSeekBar;
 
@@ -47,7 +45,6 @@ public class SimpleActivity extends AppCompatActivity {
     FrameLayout videoLoading;
 
     protected static final String testVideo = "http://domhttp.kksmg.com/2018/05/23/ocj_800k_037c50e5c82010c7c57c9f1935462f9c.mp4";
-    private ThumbnailBuffer thumbnailBuffer;
     private SimpleActivityDelegate delegate;
 
     @Override
@@ -61,7 +58,7 @@ public class SimpleActivity extends AppCompatActivity {
         delegate.setCallBack(new SimpleActivityDelegate.CallBack() {
             @Override
             public void onSeeking(SeekBar seekBar) {
-                Bitmap bitmap = thumbnailBuffer.getThumbnail((float) seekBar.getProgress() / seekBar.getMax());
+                Bitmap bitmap = Mrthumb.obtain().getThumbnail((float) seekBar.getProgress() / seekBar.getMax());
                 if (bitmap != null && !bitmap.isRecycled()) {
                     imgPreview.setImageBitmap(bitmap);
                     imgPreview.setVisibility(View.VISIBLE);
@@ -71,16 +68,7 @@ public class SimpleActivity extends AppCompatActivity {
             @Override
             public void onPlayStateChanged(int playState, long duration) {
                 if (playState == NiceVideoPlayer.STATE_PREPARED) {
-                    try {
-                        if (thumbnailBuffer == null) {
-                            thumbnailBuffer = new ThumbnailBuffer(100);
-                        }
-                        MediaMetadataRetrieverCompat mmr = new MediaMetadataRetrieverCompat(RetrieverType.RETRIEVER_FFMPEG);
-                        thumbnailBuffer.setMediaMedataRetriever(mmr, duration);
-                        thumbnailBuffer.execute(testVideo, null, 320, 180);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    Mrthumb.obtain().buffer(testVideo, duration, 100);
                 }
             }
         });
@@ -116,8 +104,6 @@ public class SimpleActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         delegate.onDestroy();
-        if (thumbnailBuffer != null) {
-            thumbnailBuffer.release();
-        }
+        Mrthumb.obtain().release();
     }
 }

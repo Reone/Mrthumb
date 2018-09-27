@@ -160,7 +160,7 @@ public class ThumbnailBuffer {
     /**
      * 分散获取缩略图
      */
-    public Bitmap getDispersionThumbnail(float percentage) {
+    private Bitmap getDispersionThumbnail(float percentage) {
         if (thumbnailDispersions == null) return null;
         int index = (int) ((maxSize - 1) * percentage);
         return (Bitmap) thumbnailDispersions.get(index);
