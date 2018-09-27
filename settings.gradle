@@ -1,1 +1,1 @@
-include ':app', ':tbufferlib'
+include ':simple', ':mrthumb'

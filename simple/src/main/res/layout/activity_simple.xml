@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.reone.simple.view.FiexedLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:demoHeight="9"
+        app:demoWidth="16"
+        app:standard="w">
+        <!-- 视频 -->
+        <FrameLayout
+            android:id="@+id/frame_video"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black" />
+
+        <!-- Loading -->
+        <FrameLayout
+            android:id="@+id/video_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#40000000"
+            android:visibility="visible">
+
+            <ProgressBar
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:indeterminate="false"
+                android:indeterminateDrawable="@anim/rotating_anim_loading" />
+
+            <TextView
+                android:id="@+id/tv_err"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top"
+                android:layout_marginTop="20dp"
+                android:includeFontPadding="false"
+                android:text="视频播放错误~~"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <!-- 拖动时屏幕中央显示框 -->
+        <FrameLayout
+            android:id="@+id/frame_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#40000000"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="40dp"
+                android:orientation="vertical">
+                <!-- 拖动预览图片 -->
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/img_preview"
+                    android:layout_width="160dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="top"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tv_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="00:00"
+                    android:textColor="#FFFFFF"
+                    android:textSize="26.67sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <!-- 底部控制栏 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bottom_cover"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+            <!-- 播放暂停 -->
+            <FrameLayout
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginRight="10dp">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/btn_play"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/icon_play" />
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/btn_pause"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/icon_pause"
+                    android:visibility="gone" />
+            </FrameLayout>
+            <!-- 拖动条 -->
+            <com.reone.simple.view.VideoSeekBar
+                android:id="@+id/video_seek_bar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <!-- 缩小按钮 -->
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/btn_zoom_out"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon_zoom_out"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </com.reone.simple.view.FiexedLayout>
+
+    <TextView
+        android:id="@+id/tv_thumb_log_area"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/tv_player_log_area"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:background="#eeeeee"
+        android:scrollbars="vertical"
+        android:textColor="#000000"
+        tools:text="tv\n_player_log_area" />
+</LinearLayout>
