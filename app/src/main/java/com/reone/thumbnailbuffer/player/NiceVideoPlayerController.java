@@ -35,7 +35,7 @@ public abstract class NiceVideoPlayerController extends FrameLayout {
      *                  <li>{@link NiceVideoPlayer#STATE_COMPLETED}</li>
      *                  </ul>
      */
-    protected abstract void onPlayStateChanged(int playState);
+    protected abstract void onPlayStateChanged(@PlayerState int playState);
 
     /**
      * 开启更新进度的计时器。
@@ -49,12 +49,7 @@ public abstract class NiceVideoPlayerController extends FrameLayout {
             mUpdateProgressTimerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    NiceVideoPlayerController.this.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateProgress();
-                        }
-                    });
+                    updateProgress();
                 }
             };
         }

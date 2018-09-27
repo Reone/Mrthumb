@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.reone.thumbnailbuffer.view.FiexedLayout
         android:layout_width="match_parent"
@@ -87,10 +89,10 @@
             android:layout_width="match_parent"
             android:layout_height="32dp"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="3dp"
             android:background="@drawable/bottom_cover"
             android:gravity="center"
             android:orientation="horizontal"
+            android:paddingBottom="3dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
             <!-- 播放暂停 -->
@@ -134,4 +136,21 @@
         </LinearLayout>
 
     </com.reone.thumbnailbuffer.view.FiexedLayout>
-</FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_thumb_log_area"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/tv_player_log_area"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:background="#eeeeee"
+        android:scrollbars="vertical"
+        android:textColor="#000000"
+        tools:text="tv\n_player_log_area" />
+</LinearLayout>

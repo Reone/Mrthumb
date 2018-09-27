@@ -1,16 +1,22 @@
 package com.reone.thumbnailbuffer;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
+import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.reone.talklibrary.TalkApp;
 import com.reone.thumbnailbuffer.player.NiceUtil;
 import com.reone.thumbnailbuffer.player.NiceVideoPlayer;
 import com.reone.thumbnailbuffer.player.NiceVideoPlayerController;
+import com.reone.thumbnailbuffer.player.PlayerState;
 import com.reone.thumbnailbuffer.view.VideoSeekBar;
 
 import java.util.HashMap;
@@ -29,6 +35,10 @@ public class SimpleActivity extends AppCompatActivity {
     TextView tvPreview;
     @BindView(R.id.tv_err)
     TextView tvErr;
+    @BindView(R.id.tv_thumb_log_area)
+    TextView tvThumbLogArea;
+    @BindView(R.id.tv_player_log_area)
+    TextView tvPlayerLogArea;
     @BindView(R.id.frame_preview)
     FrameLayout framePreview;
     @BindView(R.id.btn_play)
@@ -51,6 +61,7 @@ public class SimpleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_simple);
         ButterKnife.bind(this);
         initVideoPlayer();
+        initLogArea();
     }
 
     @OnClick({R.id.btn_play, R.id.btn_pause, R.id.btn_zoom_out})
@@ -62,16 +73,19 @@ public class SimpleActivity extends AppCompatActivity {
                 } else {
                     videoPlayer.restart();
                 }
-                TalkApp.talk("click play");
+                TalkApp.talk("播放");
                 break;
             case R.id.btn_pause:
                 videoPlayer.pause();
-                TalkApp.talk("click pause");
+                TalkApp.talk("暂停");
                 break;
             case R.id.btn_zoom_out:
-                TalkApp.talk("click out");
                 break;
         }
+    }
+
+    private void initLogArea() {
+        tvPlayerLogArea.setMovementMethod(ScrollingMovementMethod.getInstance());
     }
 
     private void initVideoPlayer() {
@@ -88,10 +102,12 @@ public class SimpleActivity extends AppCompatActivity {
                 }
                 switch (playState) {
                     case NiceVideoPlayer.STATE_IDLE:
-                        videoLoading.setVisibility(VISIBLE);
+                        videoLoading.setVisibility(GONE);
                         changeNormalBtn(true);
+                        startUpdateProgressTimer();
                         break;
                     case NiceVideoPlayer.STATE_PREPARED:
+                        videoLoading.setVisibility(GONE);
                         startUpdateProgressTimer();
                         break;
                     case NiceVideoPlayer.STATE_PLAYING:
@@ -113,18 +129,24 @@ public class SimpleActivity extends AppCompatActivity {
                         reset();
                         break;
                 }
+                playStateLog(playState);
             }
 
             @Override
             protected void updateProgress() {
-                long position = videoPlayer.getCurrentPosition();
-                long duration = videoPlayer.getDuration();
-                int bufferPercentage = videoPlayer.getBufferPercentage();
-                int progress = (int) (100f * position / duration);
-                videoSeekBar.seekbar.setProgress(progress);
-                videoSeekBar.seekbar.setSecondaryProgress(bufferPercentage);
-                videoSeekBar.seekTime.setText(NiceUtil.formatTime(position));
-                videoSeekBar.sumTime.setText(NiceUtil.formatTime(duration));
+                new Handler(SimpleActivity.this.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        long position = videoPlayer.getCurrentPosition();
+                        long duration = videoPlayer.getDuration();
+                        int bufferPercentage = videoPlayer.getBufferPercentage();
+                        int progress = (int) (100f * position / duration);
+                        videoSeekBar.seekbar.setProgress(progress);
+                        videoSeekBar.seekbar.setSecondaryProgress(bufferPercentage);
+                        videoSeekBar.seekTime.setText(NiceUtil.formatTime(position));
+                        videoSeekBar.sumTime.setText(NiceUtil.formatTime(duration));
+                    }
+                });
             }
 
             @Override
@@ -133,12 +155,110 @@ public class SimpleActivity extends AppCompatActivity {
                 videoSeekBar.seekbar.setSecondaryProgress(0);
                 videoSeekBar.seekTime.setText(NiceUtil.formatTime(0));
                 videoSeekBar.sumTime.setText(NiceUtil.formatTime(0));
+                cancelUpdateProgressTimer();
             }
         });
         videoPlayer.continueFromLastPosition(false);
         frameVideo.removeAllViews();
         frameVideo.addView(videoPlayer, FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         videoPlayer.setUp(testVideo, new HashMap<String, String>());
+        videoSeekBar.setSeekBarListener(new VideoSeekBar.SeekBarListener() {
+            @Override
+            public void onSeek(SeekBar seekBar) {
+                if (videoPlayer != null) {
+                    long position = (long) (videoPlayer.getDuration() * seekBar.getProgress() / 100f);
+                    videoPlayer.seekTo(position);
+                    if (videoPlayer.isBufferingPaused() || videoPlayer.isPaused()) {
+                        videoPlayer.restart();
+                    }
+                }
+                if (framePreview != null) {
+                    framePreview.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onSeeking(SeekBar seekBar, int progress) {
+                if (videoPlayer != null) {
+                    long position = (long) (videoPlayer.getDuration() * seekBar.getProgress() / 100f);
+                    //如果不是全屏状态，不需要显示缩略图
+                    showPreView(position);
+                }
+            }
+
+            @Override
+            public void onSeekStart() {
+                if (framePreview != null) {
+                    framePreview.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    private void playStateLog(@PlayerState int playState) {
+        StringBuilder sb = new StringBuilder();
+        if (!TextUtils.isEmpty(tvPlayerLogArea.getText())) {
+            sb.append(tvPlayerLogArea.getText().toString());
+            sb.append("\n");
+        }
+        switch (playState) {
+            case NiceVideoPlayer.STATE_BUFFERING_PAUSED:
+                sb.append("STATE_BUFFERING_PAUSED");
+                break;
+            case NiceVideoPlayer.STATE_BUFFERING_PLAYING:
+                sb.append("STATE_BUFFERING_PLAYING");
+                break;
+            case NiceVideoPlayer.STATE_COMPLETED:
+                sb.append("STATE_COMPLETED");
+                break;
+            case NiceVideoPlayer.STATE_ERROR:
+                sb.append("STATE_ERROR");
+                break;
+            case NiceVideoPlayer.STATE_IDLE:
+                sb.append("STATE_IDLE");
+                break;
+            case NiceVideoPlayer.STATE_PAUSED:
+                sb.append("STATE_PAUSED");
+                break;
+            case NiceVideoPlayer.STATE_PLAYING:
+                sb.append("STATE_PLAYING");
+                break;
+            case NiceVideoPlayer.STATE_PREPARED:
+                sb.append("STATE_PREPARED");
+                break;
+            case NiceVideoPlayer.STATE_PREPARING:
+                sb.append("STATE_PREPARING");
+                break;
+        }
+        tvPlayerLogArea.setText(sb.toString());
+        int offset = tvPlayerLogArea.getLineCount() * tvPlayerLogArea.getLineHeight();
+        if (offset > tvPlayerLogArea.getHeight()) {
+            tvPlayerLogArea.scrollTo(0, offset - tvPlayerLogArea.getHeight());
+        }
+    }
+
+    private void showPreView(long position) {
+        tvPreview.setText(NiceUtil.formatTime(position));
+        //这里的隐藏是非常必要的。播放第二个视频的时候，初始状态它的缩略图view显示的是上一个视频的bitmap，而这个bitmap已经回收了
+        //在ImageView隐藏时不会出现问题，当获取到新的bitmap后再进行显示操作
+        imgPreview.setVisibility(View.GONE);
+        try {
+            Bitmap bitmap = videoPlayer.getFrameAtTime(position);
+            if (bitmap != null && !bitmap.isRecycled()) {
+                imgPreview.setImageBitmap(bitmap);
+                imgPreview.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (videoPlayer != null) {
+            videoPlayer.releaseInBackground();
+        }
     }
 
     /**
