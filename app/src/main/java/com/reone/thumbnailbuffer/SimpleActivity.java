@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.reone.mmrc.MediaMetadataRetrieverCompat;
@@ -58,8 +59,8 @@ public class SimpleActivity extends AppCompatActivity {
         delegate.initLogArea();
         delegate.setCallBack(new SimpleActivityDelegate.CallBack() {
             @Override
-            public void onSeeking(long position, long duration) {
-                Bitmap bitmap = thumbnailBuffer.getThumbnail((float) position / duration);
+            public void onSeeking(SeekBar seekBar) {
+                Bitmap bitmap = thumbnailBuffer.getThumbnail((float) seekBar.getProgress() / seekBar.getMax());
                 if (bitmap != null && !bitmap.isRecycled()) {
                     imgPreview.setImageBitmap(bitmap);
                     imgPreview.setVisibility(View.VISIBLE);

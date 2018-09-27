@@ -128,10 +128,10 @@ public class SimpleActivityDelegate {
             @Override
             public void onSeeking(SeekBar seekBar, int progress) {
                 if (videoPlayer != null) {
-                    long position = (long) (videoPlayer.getDuration() * seekBar.getProgress() / 100f);
+                    long position = videoPlayer.getDuration() * seekBar.getProgress() / seekBar.getMax();
                     simpleActivity.tvPreview.setText(NiceUtil.formatTime(position));
                     if (callBack != null) {
-                        callBack.onSeeking(position, videoPlayer.getDuration());
+                        callBack.onSeeking(seekBar);
                     }
                 }
             }
@@ -236,7 +236,7 @@ public class SimpleActivityDelegate {
     }
 
     public interface CallBack {
-        void onSeeking(long position, long duration);
+        void onSeeking(SeekBar seekBar);
 
         void onPlayStateChanged(int playState, long duration);
     }
