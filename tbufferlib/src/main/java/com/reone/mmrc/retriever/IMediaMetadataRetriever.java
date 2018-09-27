@@ -1,4 +1,4 @@
-package com.reone.mmrc;
+package com.reone.mmrc.retriever;
 
 import android.content.Context;
 import android.graphics.Bitmap;

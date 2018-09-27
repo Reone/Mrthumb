@@ -9,7 +9,8 @@ import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.reone.mmrc.MediaMetadataRetrieverCompat;
+import com.reone.mmrc.RetrieverType;
+import com.reone.mmrc.retriever.MediaMetadataRetrieverCompat;
 import com.reone.mmrc.thumbnail.ThumbnailBuffer;
 import com.reone.thumbnailbuffer.player.NiceVideoPlayer;
 import com.reone.thumbnailbuffer.view.VideoSeekBar;
@@ -74,7 +75,7 @@ public class SimpleActivity extends AppCompatActivity {
                         if (thumbnailBuffer == null) {
                             thumbnailBuffer = new ThumbnailBuffer(100);
                         }
-                        MediaMetadataRetrieverCompat mmr = new MediaMetadataRetrieverCompat(MediaMetadataRetrieverCompat.RETRIEVER_FFMPEG);
+                        MediaMetadataRetrieverCompat mmr = new MediaMetadataRetrieverCompat(RetrieverType.RETRIEVER_FFMPEG);
                         thumbnailBuffer.setMediaMedataRetriever(mmr, duration);
                         thumbnailBuffer.execute(testVideo, null, 320, 180);
                     } catch (Exception e) {

@@ -3,10 +3,10 @@ package com.reone.mmrc.transform;
 import android.media.MediaMetadataRetriever;
 import android.util.SparseArray;
 
-import com.reone.mmrc.IMediaMetadataRetriever;
-import com.reone.mmrc.MediaMetadataRetrieverCompat;
-import com.reone.mmrc.impl.FFmpegMediaMetadataRetrieverImpl;
-import com.reone.mmrc.impl.MediaMetadataRetrieverImpl;
+import com.reone.mmrc.retriever.IMediaMetadataRetriever;
+import com.reone.mmrc.retriever.MediaMetadataRetrieverCompat;
+import com.reone.mmrc.retriever.FFmpegMediaMetadataRetrieverImpl;
+import com.reone.mmrc.retriever.MediaMetadataRetrieverImpl;
 
 import wseemann.media.FFmpegMediaMetadataRetriever;
 

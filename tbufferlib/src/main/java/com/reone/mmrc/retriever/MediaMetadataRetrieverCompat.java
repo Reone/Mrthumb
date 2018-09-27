@@ -1,11 +1,10 @@
-package com.reone.mmrc;
+package com.reone.mmrc.retriever;
 
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.reone.mmrc.impl.FFmpegMediaMetadataRetrieverImpl;
-import com.reone.mmrc.impl.MediaMetadataRetrieverImpl;
+import com.reone.mmrc.RetrieverType;
 import com.reone.mmrc.transform.BitmapRotateTransform;
 import com.reone.mmrc.transform.MetadataTransform;
 
@@ -44,15 +43,12 @@ public class MediaMetadataRetrieverCompat {
     public static final int METADATA_KEY_VIDEO_ROTATION = 24;
     public static final int METADATA_KEY_CAPTURE_FRAMERATE = 25;
 
-    public static final int RETRIEVER_FFMPEG = 0;
-    public static final int RETRIEVER_ANDROID = 1;
-
     public MediaMetadataRetrieverCompat() {
-        this(RETRIEVER_FFMPEG);
+        this(RetrieverType.RETRIEVER_FFMPEG);
     }
 
-    public MediaMetadataRetrieverCompat(int type) {
-        if (type == RETRIEVER_FFMPEG) {
+    public MediaMetadataRetrieverCompat(@RetrieverType int type) {
+        if (type == RetrieverType.RETRIEVER_FFMPEG) {
             try {
                 //创建实例前先检查是否引入FFmpegMediaMetadataRetriever
                 Class.forName("wseemann.media.FFmpegMediaMetadataRetriever");
@@ -74,7 +70,6 @@ public class MediaMetadataRetrieverCompat {
     }
 
     /**
-     *
      * @param mUrl
      * @param path
      * @deprecated Use {@link #setMediaDataSource(String)} instead.
@@ -92,8 +87,8 @@ public class MediaMetadataRetrieverCompat {
         setMediaDataSource(new File(path));
     }
 
-    public void setDataSource(String uri, Map<String,String> headers){
-        this.impl.setDateSource(uri,headers);
+    public void setDataSource(String uri, Map<String, String> headers) {
+        this.impl.setDateSource(uri, headers);
     }
 
     public void setMediaDataSource(File file) throws FileNotFoundException {
@@ -208,6 +203,7 @@ public class MediaMetadataRetrieverCompat {
 
     /**
      * 是否有角度
+     *
      * @param rotate
      * @return
      */

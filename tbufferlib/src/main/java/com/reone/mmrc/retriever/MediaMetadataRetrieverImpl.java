@@ -1,25 +1,22 @@
-package com.reone.mmrc.impl;
+package com.reone.mmrc.retriever;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-
-import com.reone.mmrc.IMediaMetadataRetriever;
 
 import java.util.Map;
 
-import wseemann.media.FFmpegMediaMetadataRetriever;
-
 /**
- * 基于ffmpeg实现
+ * 基于原生MediaMetadataRetriever实现
  * author  dengyuhan
- * created 2017/5/26 14:51
+ * created 2017/5/26 14:49
  */
-public class FFmpegMediaMetadataRetrieverImpl implements IMediaMetadataRetriever {
-    private FFmpegMediaMetadataRetriever mRetriever;
+public class MediaMetadataRetrieverImpl implements IMediaMetadataRetriever {
+    private MediaMetadataRetriever mRetriever;
 
-    public FFmpegMediaMetadataRetrieverImpl() {
-        this.mRetriever = new FFmpegMediaMetadataRetriever();
+    public MediaMetadataRetrieverImpl() {
+        this.mRetriever = new MediaMetadataRetriever();
     }
 
     @Override
@@ -49,12 +46,20 @@ public class FFmpegMediaMetadataRetrieverImpl implements IMediaMetadataRetriever
 
     @Override
     public Bitmap getScaledFrameAtTime(long timeUs, int width, int height) {
-        return this.mRetriever.getScaledFrameAtTime(timeUs, width, height);
+        Bitmap atTime = this.mRetriever.getFrameAtTime(timeUs);
+        if (atTime == null) {
+            return null;
+        }
+        return Bitmap.createScaledBitmap(atTime, width, height, true);
     }
 
     @Override
     public Bitmap getScaledFrameAtTime(long timeUs, int option, int width, int height) {
-        return this.mRetriever.getScaledFrameAtTime(timeUs, option, width, height);
+        Bitmap atTime = this.mRetriever.getFrameAtTime(timeUs, option);
+        if (atTime == null) {
+            return null;
+        }
+        return Bitmap.createScaledBitmap(atTime, width, height, true);
     }
 
     @Override
@@ -64,12 +69,11 @@ public class FFmpegMediaMetadataRetrieverImpl implements IMediaMetadataRetriever
 
     @Override
     public String extractMetadata(String keyCode) {
-        return this.mRetriever.extractMetadata(keyCode);
+        return this.mRetriever.extractMetadata(Integer.parseInt(keyCode));
     }
 
     @Override
     public void release() {
         this.mRetriever.release();
     }
-
 }

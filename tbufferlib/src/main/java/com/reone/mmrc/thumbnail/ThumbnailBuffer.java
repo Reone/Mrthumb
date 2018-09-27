@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.reone.mmrc.MediaMetadataRetrieverCompat;
+import com.reone.mmrc.retriever.MediaMetadataRetrieverCompat;
 import com.reone.tbufferlib.BuildConfig;
 
 import java.util.HashMap;
