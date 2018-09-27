@@ -15,7 +15,6 @@ import com.reone.simple.view.VideoSeekBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class SimpleActivity extends AppCompatActivity {
 
@@ -53,8 +52,6 @@ public class SimpleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_simple);
         ButterKnife.bind(this);
         delegate = new SimpleActivityDelegate(this);
-        delegate.initVideoPlayer();
-        delegate.initLogArea();
         delegate.setCallBack(new SimpleActivityDelegate.CallBack() {
             @Override
             public void onSeeking(SeekBar seekBar) {
@@ -72,20 +69,6 @@ public class SimpleActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    @OnClick({R.id.btn_play, R.id.btn_pause, R.id.btn_zoom_out})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.btn_play:
-                delegate.onBtnPlayClick();
-                break;
-            case R.id.btn_pause:
-                delegate.onBtnPauseClick();
-                break;
-            case R.id.btn_zoom_out:
-                break;
-        }
     }
 
     @Override

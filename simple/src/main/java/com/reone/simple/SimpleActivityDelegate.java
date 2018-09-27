@@ -7,12 +7,12 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
 
-import com.reone.talklibrary.TalkApp;
 import com.reone.simple.player.NiceUtil;
 import com.reone.simple.player.NiceVideoPlayer;
 import com.reone.simple.player.NiceVideoPlayerController;
 import com.reone.simple.player.PlayerState;
 import com.reone.simple.view.VideoSeekBar;
+import com.reone.talklibrary.TalkApp;
 
 import java.util.HashMap;
 
@@ -23,17 +23,31 @@ import static com.reone.simple.SimpleActivity.videoUrl;
  */
 public class SimpleActivityDelegate {
     private SimpleActivity simpleActivity;
-    NiceVideoPlayer videoPlayer;
+    private NiceVideoPlayer videoPlayer;
 
     SimpleActivityDelegate(SimpleActivity simpleActivity) {
         this.simpleActivity = simpleActivity;
+        initVideoPlayer();
+        initView();
     }
 
-    protected void initLogArea() {
+    private void initView() {
         simpleActivity.tvPlayerLogArea.setMovementMethod(ScrollingMovementMethod.getInstance());
+        simpleActivity.btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBtnPlayClick();
+            }
+        });
+        simpleActivity.btnPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBtnPauseClick();
+            }
+        });
     }
 
-    protected void initVideoPlayer() {
+    private void initVideoPlayer() {
         videoPlayer = new NiceVideoPlayer(simpleActivity);
         videoPlayer.setDefaultMute(false);
         videoPlayer.setPlayerType(NiceVideoPlayer.TYPE_IJK); // IjkPlayer or MediaPlayer
@@ -199,11 +213,6 @@ public class SimpleActivityDelegate {
         }
     }
 
-    /**
-     * 改变中心播放按钮状态
-     *
-     * @param showPlayBtn
-     */
     private void changeNormalBtn(boolean showPlayBtn) {
         simpleActivity.btnPlay.setVisibility(showPlayBtn ? View.VISIBLE : View.GONE);
         simpleActivity.btnPause.setVisibility(showPlayBtn ? View.GONE : View.VISIBLE);
