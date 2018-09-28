@@ -8,7 +8,7 @@ import android.util.Log;
  */
 public class LogUtil {
 
-    private static final String TAG = "NiceVideoPlayer";
+    private static final String TAG = "Mr simple";
 
     public static void d(String message) {
         Log.d(TAG, message);

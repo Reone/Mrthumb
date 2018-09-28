@@ -1,5 +1,6 @@
 package com.reone.simple;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.reone.mrthumb.Mrthumb;
+import com.reone.mrthumb.MrthumbService;
+import com.reone.simple.player.LogUtil;
 import com.reone.simple.player.NiceVideoPlayer;
 import com.reone.simple.view.VideoSeekBar;
 
@@ -66,6 +69,10 @@ public class SimpleActivity extends AppCompatActivity {
             public void onPlayStateChanged(int playState, long videoDuration) {
                 if (playState == NiceVideoPlayer.STATE_PREPARED) {
                     Mrthumb.obtain().buffer(videoUrl, videoDuration, Mrthumb.Default.COUNT);
+                    Intent intent = new Intent(SimpleActivity.this, MrthumbService.class);
+                    intent.putExtra("url", videoUrl);
+                    startService(intent);
+                    LogUtil.d("service start");
                 }
             }
         });
