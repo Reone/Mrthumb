@@ -170,7 +170,7 @@ public class ThumbnailBuffer {
      * 初始化分散式缩略图数组
      */
     private void initThumbnailDispersions(final int maxSize) {
-        thumbnailDispersions = new DispersionArray(maxSize) {
+        thumbnailDispersions = new DispersionArray<Bitmap>(maxSize) {
             @Override
             public Bitmap getIndex(int index) {
                 Bitmap bitmap = null;

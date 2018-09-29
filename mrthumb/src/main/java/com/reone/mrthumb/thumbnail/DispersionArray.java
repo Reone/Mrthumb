@@ -10,19 +10,19 @@ import java.util.Collections;
  * 分散式填充与获取
  * eg:数组0~8位置上，填充顺序为 0,8 -> 4 -> 2,6 -> 1,3,5,7
  */
-public abstract class DispersionArray {
+public abstract class DispersionArray<T> {
     private int maxSize;
-    private Object[] array;
+    private T[] array;
     private ArrayList<Integer> bufferIndex = new ArrayList<>();
 
     public DispersionArray(int max) {
         maxSize = max;
-        array = new Object[max];
+        array = (T[]) new Object[max];
     }
 
-    public abstract Bitmap getIndex(int index);
+    public abstract T getIndex(int index);
 
-    public Object get(int index) {
+    public T get(int index) {
         if (bufferIndex.contains(index)) {
             return array[index];
         } else if (index == 0 || index == maxSize - 1) {
