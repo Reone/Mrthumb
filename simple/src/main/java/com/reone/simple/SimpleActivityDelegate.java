@@ -1,6 +1,7 @@
 package com.reone.simple;
 
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -22,13 +23,41 @@ import static com.reone.simple.SimpleActivity.videoUrl;
  * Created by wangxingsheng on 2018/9/27.
  */
 public class SimpleActivityDelegate {
+    private static final int FLAG_PLAYER_LOG = 1;
+    private static final int FLAG_THUMB_LOG = 2;
     private SimpleActivity simpleActivity;
     private NiceVideoPlayer videoPlayer;
+    private Handler mHandler;
 
     SimpleActivityDelegate(SimpleActivity simpleActivity) {
         this.simpleActivity = simpleActivity;
+        initHandler();
         initVideoPlayer();
         initView();
+    }
+
+    private void initHandler() {
+        mHandler = new Handler(simpleActivity.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case FLAG_PLAYER_LOG:
+                        simpleActivity.tvPlayerLogArea.setText(msg.obj.toString());
+                        int offset1 = simpleActivity.tvPlayerLogArea.getLineCount() * simpleActivity.tvPlayerLogArea.getLineHeight();
+                        if (offset1 > simpleActivity.tvPlayerLogArea.getHeight()) {
+                            simpleActivity.tvPlayerLogArea.scrollTo(0, offset1 - simpleActivity.tvPlayerLogArea.getHeight());
+                        }
+                        break;
+                    case FLAG_THUMB_LOG:
+                        simpleActivity.tvThumbLogArea.setText(msg.obj.toString());
+                        int offset2 = simpleActivity.tvThumbLogArea.getLineCount() * simpleActivity.tvThumbLogArea.getLineHeight();
+                        if (offset2 > simpleActivity.tvThumbLogArea.getHeight()) {
+                            simpleActivity.tvThumbLogArea.scrollTo(0, offset2 - simpleActivity.tvThumbLogArea.getHeight());
+                        }
+                        break;
+                }
+            }
+        };
     }
 
     private void initView() {
@@ -207,11 +236,10 @@ public class SimpleActivityDelegate {
                 sb.append("STATE_PREPARING");
                 break;
         }
-        simpleActivity.tvPlayerLogArea.setText(sb.toString());
-        int offset = simpleActivity.tvPlayerLogArea.getLineCount() * simpleActivity.tvPlayerLogArea.getLineHeight();
-        if (offset > simpleActivity.tvPlayerLogArea.getHeight()) {
-            simpleActivity.tvPlayerLogArea.scrollTo(0, offset - simpleActivity.tvPlayerLogArea.getHeight());
-        }
+        Message playerMsg = Message.obtain();
+        playerMsg.what = FLAG_PLAYER_LOG;
+        playerMsg.obj = sb.toString();
+        mHandler.sendMessage(playerMsg);
     }
 
     protected void thumbProcessLog(String log) {
@@ -221,11 +249,10 @@ public class SimpleActivityDelegate {
             sb.append("\n");
         }
         sb.append(log);
-        simpleActivity.tvThumbLogArea.setText(sb.toString());
-        int offset = simpleActivity.tvThumbLogArea.getLineCount() * simpleActivity.tvThumbLogArea.getLineHeight();
-        if (offset > simpleActivity.tvThumbLogArea.getHeight()) {
-            simpleActivity.tvThumbLogArea.scrollTo(0, offset - simpleActivity.tvThumbLogArea.getHeight());
-        }
+        Message thumbMsg = Message.obtain();
+        thumbMsg.what = FLAG_THUMB_LOG;
+        thumbMsg.obj = sb.toString();
+        mHandler.sendMessage(thumbMsg);
     }
 
     private void changeNormalBtn(boolean showPlayBtn) {
