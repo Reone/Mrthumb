@@ -3,9 +3,10 @@ package com.reone.mrthumb;
 import android.graphics.Bitmap;
 
 import com.reone.mrthumb.listener.ProcessListener;
-import com.reone.mrthumb.tools.MrthumbPool;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
+import com.reone.mrthumb.tools.MrthumbPool;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -13,6 +14,7 @@ import java.util.Map;
  * 拇指先生
  */
 public class Mrthumb {
+    private ArrayList<ProcessListener> listenerList = new ArrayList<>();
     private MrthumbPool mrthumbPool;
     private static Mrthumb mInstance = null;
 
@@ -54,14 +56,26 @@ public class Mrthumb {
      */
     public void buffer(String url, Map<String, String> headers, long videoDuration, @RetrieverType int retrieverType, int count, int thumbnailWidth, int thumbnailHeight) {
         try {
-            if (mrthumbPool == null) {
-                mrthumbPool = new MrthumbPool(count);
-            }
+            initMrthumbPool(count);
             MediaMetadataRetrieverCompat mmr = new MediaMetadataRetrieverCompat(retrieverType);
             mrthumbPool.setMediaMedataRetriever(mmr, videoDuration);
             mrthumbPool.execute(url, headers, thumbnailWidth, thumbnailHeight);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void initMrthumbPool(int count) {
+        if (mrthumbPool == null) {
+            mrthumbPool = new MrthumbPool(count);
+            mrthumbPool.setProcessListener(new ProcessListener() {
+                @Override
+                public void onProcess(int index, int cacheCount, int maxCount, long time, long duration) {
+                    for (ProcessListener listener : listenerList) {
+                        listener.onProcess(index, cacheCount, maxCount, time, duration);
+                    }
+                }
+            });
         }
     }
 
@@ -82,12 +96,11 @@ public class Mrthumb {
         if (mrthumbPool != null) {
             mrthumbPool.release();
         }
+        listenerList.clear();
     }
 
     public void addProcessListener(ProcessListener processListener) {
-        if (mrthumbPool != null) {
-            mrthumbPool.setProcessListener(processListener);
-        }
+        listenerList.add(processListener);
     }
 
     public static class Default {
