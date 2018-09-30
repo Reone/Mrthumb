@@ -33,6 +33,7 @@ public class SimpleActivityDelegate {
 
     private void initView() {
         simpleActivity.tvPlayerLogArea.setMovementMethod(ScrollingMovementMethod.getInstance());
+        simpleActivity.tvThumbLogArea.setMovementMethod(ScrollingMovementMethod.getInstance());
         simpleActivity.btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -210,6 +211,20 @@ public class SimpleActivityDelegate {
         int offset = simpleActivity.tvPlayerLogArea.getLineCount() * simpleActivity.tvPlayerLogArea.getLineHeight();
         if (offset > simpleActivity.tvPlayerLogArea.getHeight()) {
             simpleActivity.tvPlayerLogArea.scrollTo(0, offset - simpleActivity.tvPlayerLogArea.getHeight());
+        }
+    }
+
+    protected void thumbProcessLog(String log) {
+        StringBuilder sb = new StringBuilder();
+        if (!TextUtils.isEmpty(simpleActivity.tvThumbLogArea.getText())) {
+            sb.append(simpleActivity.tvThumbLogArea.getText().toString());
+            sb.append("\n");
+        }
+        sb.append(log);
+        simpleActivity.tvThumbLogArea.setText(sb.toString());
+        int offset = simpleActivity.tvThumbLogArea.getLineCount() * simpleActivity.tvThumbLogArea.getLineHeight();
+        if (offset > simpleActivity.tvThumbLogArea.getHeight()) {
+            simpleActivity.tvThumbLogArea.scrollTo(0, offset - simpleActivity.tvThumbLogArea.getHeight());
         }
     }
 

@@ -146,7 +146,14 @@
         android:id="@+id/tv_thumb_log_area"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:background="#eeeeee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollbars="vertical"
+        android:textColor="#000000"
+        tools:text="tv\n_thumb_log_area" />
 
     <TextView
         android:id="@+id/tv_player_log_area"
@@ -155,6 +162,8 @@
         android:layout_margin="10dp"
         android:layout_weight="1"
         android:background="#eeeeee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:scrollbars="vertical"
         android:textColor="#000000"
         tools:text="tv\n_player_log_area" />

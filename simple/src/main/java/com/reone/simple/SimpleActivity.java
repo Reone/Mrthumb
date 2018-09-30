@@ -3,6 +3,7 @@ package com.reone.simple;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
@@ -11,7 +12,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.reone.mrthumb.Mrthumb;
-import com.reone.mrthumb.MrthumbService;
+import com.reone.mrthumb.listener.ProcessListener;
+import com.reone.mrthumb.process.MrthumbService;
 import com.reone.simple.player.LogUtil;
 import com.reone.simple.player.NiceVideoPlayer;
 import com.reone.simple.view.VideoSeekBar;
@@ -48,10 +50,12 @@ public class SimpleActivity extends AppCompatActivity {
 
     protected static final String videoUrl = "http://domhttp.kksmg.com/2018/05/23/ocj_800k_037c50e5c82010c7c57c9f1935462f9c.mp4";
     private SimpleActivityDelegate delegate;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        handler = new Handler();
         setContentView(R.layout.activity_simple);
         ButterKnife.bind(this);
         delegate = new SimpleActivityDelegate(this);
@@ -74,6 +78,20 @@ public class SimpleActivity extends AppCompatActivity {
                     startService(intent);
                     LogUtil.d("service start");
                 }
+            }
+        });
+        Mrthumb.obtain().addProcessListener(new ProcessListener() {
+
+            @Override
+            public void onProcess(final int index, final int cacheCount, final int maxCount, final long time, final long duration) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (delegate != null) {
+                            delegate.thumbProcessLog("cache " + time / 1000 + "s at " + index + " process:" + (cacheCount * 100 / maxCount) + "%");
+                        }
+                    }
+                });
             }
         });
     }
