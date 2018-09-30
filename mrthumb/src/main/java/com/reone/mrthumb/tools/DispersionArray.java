@@ -1,4 +1,4 @@
-package com.reone.mrthumb.thumbnail;
+package com.reone.mrthumb.tools;
 
 import android.graphics.Bitmap;
 

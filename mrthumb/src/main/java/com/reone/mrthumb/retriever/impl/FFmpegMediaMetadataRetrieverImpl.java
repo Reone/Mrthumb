@@ -1,8 +1,10 @@
-package com.reone.mrthumb.retriever;
+package com.reone.mrthumb.retriever.impl;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+
+import com.reone.mrthumb.retriever.IMediaMetadataRetriever;
 
 import java.util.Map;
 

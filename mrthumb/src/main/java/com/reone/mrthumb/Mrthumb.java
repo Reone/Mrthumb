@@ -2,8 +2,9 @@ package com.reone.mrthumb;
 
 import android.graphics.Bitmap;
 
+import com.reone.mrthumb.listener.ProcessListener;
+import com.reone.mrthumb.tools.MrthumbPool;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
-import com.reone.mrthumb.thumbnail.ThumbnailBuffer;
 
 import java.util.Map;
 
@@ -12,7 +13,7 @@ import java.util.Map;
  * 拇指先生
  */
 public class Mrthumb {
-    private ThumbnailBuffer thumbnailBuffer;
+    private MrthumbPool mrthumbPool;
     private static Mrthumb mInstance = null;
 
     public static Mrthumb obtain() {
@@ -53,12 +54,12 @@ public class Mrthumb {
      */
     public void buffer(String url, Map<String, String> headers, long videoDuration, @RetrieverType int retrieverType, int count, int thumbnailWidth, int thumbnailHeight) {
         try {
-            if (thumbnailBuffer == null) {
-                thumbnailBuffer = new ThumbnailBuffer(count);
+            if (mrthumbPool == null) {
+                mrthumbPool = new MrthumbPool(count);
             }
             MediaMetadataRetrieverCompat mmr = new MediaMetadataRetrieverCompat(retrieverType);
-            thumbnailBuffer.setMediaMedataRetriever(mmr, videoDuration);
-            thumbnailBuffer.execute(url, headers, thumbnailWidth, thumbnailHeight);
+            mrthumbPool.setMediaMedataRetriever(mmr, videoDuration);
+            mrthumbPool.execute(url, headers, thumbnailWidth, thumbnailHeight);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,15 +72,21 @@ public class Mrthumb {
      * @return 缩略图
      */
     public Bitmap getThumbnail(float percentage) {
-        if (thumbnailBuffer != null) {
-            return thumbnailBuffer.getThumbnail(percentage);
+        if (mrthumbPool != null) {
+            return mrthumbPool.getThumbnail(percentage);
         }
         return null;
     }
 
     public void release() {
-        if (thumbnailBuffer != null) {
-            thumbnailBuffer.release();
+        if (mrthumbPool != null) {
+            mrthumbPool.release();
+        }
+    }
+
+    public void addProcessListener(ProcessListener processListener) {
+        if (mrthumbPool != null) {
+            mrthumbPool.setProcessListener(processListener);
         }
     }
 

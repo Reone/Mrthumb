@@ -1,10 +1,12 @@
-package com.reone.mrthumb.thumbnail;
+package com.reone.mrthumb.process;
 
 import android.graphics.Bitmap;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
+import com.reone.mrthumb.tools.DispersionArray;
 import com.reone.tbufferlib.BuildConfig;
 
 import java.util.HashMap;
@@ -16,6 +18,7 @@ import java.util.Map;
 public class ThumbnailBuffer {
     private MediaMetadataRetrieverCompat mmr;
     private int maxSize;
+    private int cacheCount;
     private int thumbnailWidth;
     private int thumbnailHeight;
     private Bitmap[] thumbnails;
@@ -24,6 +27,7 @@ public class ThumbnailBuffer {
     private String mUrl;
     private Map<String, String> mHeaders;
     private DispersionArray thumbnailDispersions;
+    private ProcessListener processListener;
     private boolean dispersionBuffer = true;
     private boolean enable = true;
 
@@ -54,6 +58,7 @@ public class ThumbnailBuffer {
         if (!initThread.isInterrupted()) {
             initThread.interrupt();
         }
+        cacheCount = 0;
         initThread.start();
     }
 
@@ -126,6 +131,9 @@ public class ThumbnailBuffer {
                         thumbnailWidth, thumbnailHeight);
                 thumbnails[i] = lastThumbnail;
                 log("ThumbnailBuffer order buffer i = " + i);
+                if (processListener != null) {
+                    processListener.onProcess(i, ++cacheCount, maxSize, time, duration);
+                }
             } catch (Exception ignore) {
             }
         }
@@ -179,6 +187,9 @@ public class ThumbnailBuffer {
                     log("ThumbnailBuffer dispersions record buffer i = " + index + " at time:" + time);
                     bitmap = mmr.getScaledFrameAtTime(time * 1000, MediaMetadataRetrieverCompat.OPTION_CLOSEST,
                             thumbnailWidth, thumbnailHeight);
+                    if (processListener != null) {
+                        processListener.onProcess(index, ++cacheCount, maxSize, time, duration);
+                    }
                 } catch (Exception ignore) {
                 }
                 return bitmap;
@@ -216,6 +227,10 @@ public class ThumbnailBuffer {
         }
         mUrl = null;
         mHeaders = null;
+    }
+
+    public void setProcessListener(ProcessListener processListener) {
+        this.processListener = processListener;
     }
 
     private void logBitmapSize(Bitmap bitmap) {

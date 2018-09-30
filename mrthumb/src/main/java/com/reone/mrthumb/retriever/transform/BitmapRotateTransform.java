@@ -1,4 +1,4 @@
-package com.reone.mrthumb.transform;
+package com.reone.mrthumb.retriever.transform;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;

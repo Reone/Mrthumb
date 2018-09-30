@@ -1,4 +1,4 @@
-package com.reone.mrthumb;
+package com.reone.mrthumb.process;
 
 import android.app.IntentService;
 import android.content.Intent;

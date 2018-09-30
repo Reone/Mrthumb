@@ -5,8 +5,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.reone.mrthumb.RetrieverType;
-import com.reone.mrthumb.transform.BitmapRotateTransform;
-import com.reone.mrthumb.transform.MetadataTransform;
+import com.reone.mrthumb.retriever.impl.FFmpegMediaMetadataRetrieverImpl;
+import com.reone.mrthumb.retriever.impl.MediaMetadataRetrieverImpl;
+import com.reone.mrthumb.retriever.transform.BitmapRotateTransform;
+import com.reone.mrthumb.retriever.transform.MetadataTransform;
 
 import java.io.File;
 import java.io.FileNotFoundException;

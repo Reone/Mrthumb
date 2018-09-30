@@ -1,12 +1,12 @@
-package com.reone.mrthumb.transform;
+package com.reone.mrthumb.retriever.transform;
 
 import android.media.MediaMetadataRetriever;
 import android.util.SparseArray;
 
 import com.reone.mrthumb.retriever.IMediaMetadataRetriever;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
-import com.reone.mrthumb.retriever.FFmpegMediaMetadataRetrieverImpl;
-import com.reone.mrthumb.retriever.MediaMetadataRetrieverImpl;
+import com.reone.mrthumb.retriever.impl.FFmpegMediaMetadataRetrieverImpl;
+import com.reone.mrthumb.retriever.impl.MediaMetadataRetrieverImpl;
 
 import wseemann.media.FFmpegMediaMetadataRetriever;
 
