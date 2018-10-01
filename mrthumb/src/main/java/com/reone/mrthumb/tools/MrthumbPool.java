@@ -3,7 +3,7 @@ package com.reone.mrthumb.tools;
 import android.graphics.Bitmap;
 
 import com.reone.mrthumb.listener.ProcessListener;
-import com.reone.mrthumb.process.ThumbnailBuffer;
+import com.reone.mrthumb.process.ThumbThread;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
 
 import java.util.Map;
@@ -12,10 +12,10 @@ import java.util.Map;
  * Created by wangxingsheng on 2018/9/30.
  */
 public class MrthumbPool {
-    private ThumbnailBuffer thumbnailBuffer;
+    private ThumbThread thumbnailBuffer;
 
     public MrthumbPool(int count) {
-        thumbnailBuffer = new ThumbnailBuffer(count);
+        thumbnailBuffer = new ThumbThread(count);
     }
 
     public void setMediaMedataRetriever(MediaMetadataRetrieverCompat mmr, long videoDuration) {

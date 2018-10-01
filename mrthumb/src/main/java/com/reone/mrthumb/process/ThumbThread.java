@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by wangxingsheng on 2018/5/19.
  */
-public class ThumbnailBuffer {
+public class ThumbThread {
     private MediaMetadataRetrieverCompat mmr;
     private int maxSize;
     private int cacheCount;
@@ -31,7 +31,7 @@ public class ThumbnailBuffer {
     private boolean dispersionBuffer = true;
     private boolean enable = true;
 
-    public ThumbnailBuffer(int maxSize) {
+    public ThumbThread(int maxSize) {
         this.maxSize = maxSize;
         initBufferArray();
     }
@@ -98,7 +98,7 @@ public class ThumbnailBuffer {
 
     private void log(String log) {
         if (BuildConfig.DEBUG) {
-            Log.d(ThumbnailBuffer.class.getSimpleName(), log);
+            Log.d(ThumbThread.class.getSimpleName(), log);
         }
     }
 
