@@ -54,19 +54,30 @@ public class SimpleActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         delegate = new SimpleActivityDelegate(this);
         delegate.setCallBack(new SimpleActivityDelegate.CallBack() {
+
+            /**
+             * 拖动进度条过程中回调
+             */
             @Override
             public void onSeeking(SeekBar seekBar) {
-                Bitmap bitmap = Mrthumb.obtain().getThumbnail((float) seekBar.getProgress() / seekBar.getMax());
+                float percentage = (float) seekBar.getProgress() / seekBar.getMax();
+                Bitmap bitmap = Mrthumb.obtain().getThumbnail(percentage);
                 if (bitmap != null && !bitmap.isRecycled()) {
                     imgPreview.setImageBitmap(bitmap);
                     imgPreview.setVisibility(View.VISIBLE);
                 }
             }
 
+            /**
+             * 播放器视频源加载状态回调
+             */
             @Override
             public void onPlayStateChanged(int playState, long videoDuration) {
                 if (playState == NiceVideoPlayer.STATE_PREPARED) {
+                    //视频准备好后开始加载缩略图
                     Mrthumb.obtain().buffer(videoUrl, videoDuration, Mrthumb.Default.COUNT);
+//                    更详细的可以调用如下方法
+//                    Mrthumb.obtain().buffer(videoUrl, null, videoDuration, Mrthumb.Default.RETRIEVER_TYPE, Mrthumb.Default.COUNT, Mrthumb.Default.THUMBNAIL_WIDTH, Mrthumb.Default.THUMBNAIL_HEIGHT);
                 }
             }
         });
