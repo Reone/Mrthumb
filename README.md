@@ -24,7 +24,7 @@ dependencies {
 
 ## 使用说明
 
-###1.加载缩略图
+### 1.加载缩略图
 ```java
 if (playState == NiceVideoPlayer.STATE_PREPARED) {
     //视频准备好后开始加载缩略图
@@ -34,13 +34,13 @@ if (playState == NiceVideoPlayer.STATE_PREPARED) {
 }
 ```
 
-###2.获取缩略图 
+### 2.获取缩略图 
 ```java
 float percentage = (float) seekBar.getProgress() / seekBar.getMax();
 Bitmap bitmap = Mrthumb.obtain().getThumbnail(percentage);
 ```
 
-###3.添加缓存进度回调
+### 3.添加缓存进度回调
 ```java
 Mrthumb.obtain().addProcessListener(new ProcessListener() {
 
@@ -53,7 +53,7 @@ Mrthumb.obtain().addProcessListener(new ProcessListener() {
 });
 ```
 
-###4.回收资源
+### 4.回收资源
 ```java
 Mrthumb.obtain().release();
 ```
