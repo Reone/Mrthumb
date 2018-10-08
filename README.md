@@ -7,6 +7,13 @@
 - 支持网络视频缩略图
 - 使用方便
 
+## 原理说明
+- 使用MediaMetadataRetriever获取视频信息及缩略图
+- 使用MediaMetadataRetrieverCompat支持FFmpeg和自带两种解码方式
+- 使用线程异步加载缩略图并缓存
+- 支持两种不同的加载顺序选择：顺序、乱序
+- 获取不到缩略图时取最近的缩略图
+
 ## 引用说明
 ```groovy
 allprojects {
