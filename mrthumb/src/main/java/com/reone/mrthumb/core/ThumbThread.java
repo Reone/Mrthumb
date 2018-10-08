@@ -1,4 +1,4 @@
-package com.reone.mrthumb.process;
+package com.reone.mrthumb.core;
 
 import android.graphics.Bitmap;
 import android.os.SystemClock;
@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
-import com.reone.mrthumb.tools.DispersionBufferList;
 import com.reone.tbufferlib.BuildConfig;
 
 import java.util.HashMap;

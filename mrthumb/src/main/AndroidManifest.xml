@@ -2,5 +2,4 @@
     package="com.reone.tbufferlib">
     <!-- 允许应用可以访问网络。 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <application></application>
 </manifest>

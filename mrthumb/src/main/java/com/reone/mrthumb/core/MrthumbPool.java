@@ -1,10 +1,8 @@
-package com.reone.mrthumb.process;
+package com.reone.mrthumb.core;
 
 import android.graphics.Bitmap;
 
-import com.reone.mrthumb.RetrieverType;
 import com.reone.mrthumb.listener.ProcessListener;
-import com.reone.mrthumb.process.ThumbThread;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
 
 import java.util.Map;

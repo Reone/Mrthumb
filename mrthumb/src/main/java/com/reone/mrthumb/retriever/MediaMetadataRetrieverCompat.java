@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.reone.mrthumb.RetrieverType;
+import com.reone.mrthumb.core.RetrieverType;
 import com.reone.mrthumb.retriever.impl.FFmpegMediaMetadataRetrieverImpl;
 import com.reone.mrthumb.retriever.impl.MediaMetadataRetrieverImpl;
 import com.reone.mrthumb.retriever.transform.BitmapRotateTransform;

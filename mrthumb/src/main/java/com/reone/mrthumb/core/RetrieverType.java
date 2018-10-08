@@ -1,4 +1,4 @@
-package com.reone.mrthumb;
+package com.reone.mrthumb.core;
 
 /**
  * Created by wangxingsheng on 2018/9/27.
