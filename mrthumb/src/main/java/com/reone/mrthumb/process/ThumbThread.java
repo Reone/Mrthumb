@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
-import com.reone.mrthumb.tools.DispersionArray;
+import com.reone.mrthumb.tools.DispersionBufferList;
 import com.reone.tbufferlib.BuildConfig;
 
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class ThumbThread {
     private long duration;
     private String mUrl;
     private Map<String, String> mHeaders;
-    private DispersionArray thumbnailDispersions;
+    private DispersionBufferList thumbnailDispersions;
     private ProcessListener processListener;
     private boolean dispersionBuffer = true;
     private boolean enable = true;
@@ -178,7 +178,7 @@ public class ThumbThread {
      * 初始化分散式缩略图数组
      */
     private void initThumbnailDispersions(final int maxSize) {
-        thumbnailDispersions = new DispersionArray<Bitmap>(maxSize) {
+        thumbnailDispersions = new DispersionBufferList<Bitmap>(maxSize) {
             @Override
             public Bitmap getIndex(int index) {
                 Bitmap bitmap = null;

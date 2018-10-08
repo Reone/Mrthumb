@@ -10,12 +10,12 @@ import java.util.Collections;
  * 分散式填充与获取
  * eg:数组0~8位置上，填充顺序为 0,8 -> 4 -> 2,6 -> 1,3,5,7
  */
-public abstract class DispersionArray<T> {
+public abstract class DispersionBufferList<T> {
     private int maxSize;
     private T[] array;
     private ArrayList<Integer> bufferIndex = new ArrayList<>();
 
-    public DispersionArray(int max) {
+    public DispersionBufferList(int max) {
         maxSize = max;
         array = (T[]) new Object[max];
     }
