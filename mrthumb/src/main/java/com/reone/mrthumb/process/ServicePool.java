@@ -1,10 +1,12 @@
 package com.reone.mrthumb.process;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by wangxingsheng on 2018/10/8.
  */
 public class ServicePool {
-    private MrthumbService mrthumbService;
+    private WeakReference<MrthumbService> mrthumbServiceWeakReference;
     private static ServicePool mInstance = null;
 
     public static ServicePool getInstance() {
@@ -19,10 +21,11 @@ public class ServicePool {
     }
 
     public MrthumbService getMrthumbService() {
-        return mrthumbService;
+        if (mrthumbServiceWeakReference == null) return null;
+        return mrthumbServiceWeakReference.get();
     }
 
     public void setMrthumbService(MrthumbService mrthumbService) {
-        this.mrthumbService = mrthumbService;
+        this.mrthumbServiceWeakReference = new WeakReference<>(mrthumbService);
     }
 }

@@ -1,6 +1,5 @@
 package com.reone.simple;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,10 +9,8 @@ import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.reone.mrthumb.Mrthumb;
+import com.reone.mrthumb.Mrthumb2;
 import com.reone.mrthumb.listener.ProcessListener;
-import com.reone.mrthumb.process.MrthumbService;
-import com.reone.simple.player.LogUtil;
 import com.reone.simple.player.NiceVideoPlayer;
 import com.reone.simple.view.VideoSeekBar;
 
@@ -59,7 +56,7 @@ public class SimpleActivity extends AppCompatActivity {
         delegate.setCallBack(new SimpleActivityDelegate.CallBack() {
             @Override
             public void onSeeking(SeekBar seekBar) {
-                Bitmap bitmap = Mrthumb.obtain().getThumbnail((float) seekBar.getProgress() / seekBar.getMax());
+                Bitmap bitmap = Mrthumb2.obtain().getThumbnail((float) seekBar.getProgress() / seekBar.getMax());
                 if (bitmap != null && !bitmap.isRecycled()) {
                     imgPreview.setImageBitmap(bitmap);
                     imgPreview.setVisibility(View.VISIBLE);
@@ -69,15 +66,11 @@ public class SimpleActivity extends AppCompatActivity {
             @Override
             public void onPlayStateChanged(int playState, long videoDuration) {
                 if (playState == NiceVideoPlayer.STATE_PREPARED) {
-                    Mrthumb.obtain().buffer(videoUrl, videoDuration, Mrthumb.Default.COUNT);
-                    Intent intent = new Intent(SimpleActivity.this, MrthumbService.class);
-                    intent.putExtra("url", videoUrl);
-                    startService(intent);
-                    LogUtil.d("service start");
+                    Mrthumb2.obtain().buffer(SimpleActivity.this, videoUrl, videoDuration, Mrthumb2.Default.COUNT);
                 }
             }
         });
-        Mrthumb.obtain().addProcessListener(new ProcessListener() {
+        Mrthumb2.obtain().addProcessListener(new ProcessListener() {
 
             @Override
             public void onProcess(final int index, final int cacheCount, final int maxCount, final long time, final long duration) {
@@ -104,6 +97,6 @@ public class SimpleActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         delegate.onDestroy();
-        Mrthumb.obtain().release();
+        Mrthumb2.obtain().release();
     }
 }

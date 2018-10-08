@@ -45,6 +45,7 @@ public class MrthumbService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null) return;
         setting = (Setting) intent.getSerializableExtra("setting");
+        if (setting == null) return;
         mmr = new MediaMetadataRetrieverCompat(setting.getMmrType());
         cacheCount = 0;
         thumbnails = new Bitmap[setting.getMaxSize()];
@@ -197,8 +198,6 @@ public class MrthumbService extends IntentService {
             thumbnailDispersions.release();
             thumbnailDispersions = null;
         }
-        setting = null;
-        stopSelf();
     }
 
     public void setProcessListener(ProcessListener processListener) {
