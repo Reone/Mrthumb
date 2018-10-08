@@ -3,7 +3,7 @@ package com.reone.mrthumb;
 import android.graphics.Bitmap;
 
 import com.reone.mrthumb.listener.ProcessListener;
-import com.reone.mrthumb.tools.MrthumbPool;
+import com.reone.mrthumb.process.MrthumbPool;
 
 import java.util.ArrayList;
 import java.util.Map;

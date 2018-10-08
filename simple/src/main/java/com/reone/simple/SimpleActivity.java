@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.reone.mrthumb.Mrthumb2;
+import com.reone.mrthumb.Mrthumb;
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.simple.player.NiceVideoPlayer;
 import com.reone.simple.view.VideoSeekBar;
@@ -56,7 +56,7 @@ public class SimpleActivity extends AppCompatActivity {
         delegate.setCallBack(new SimpleActivityDelegate.CallBack() {
             @Override
             public void onSeeking(SeekBar seekBar) {
-                Bitmap bitmap = Mrthumb2.obtain().getThumbnail((float) seekBar.getProgress() / seekBar.getMax());
+                Bitmap bitmap = Mrthumb.obtain().getThumbnail((float) seekBar.getProgress() / seekBar.getMax());
                 if (bitmap != null && !bitmap.isRecycled()) {
                     imgPreview.setImageBitmap(bitmap);
                     imgPreview.setVisibility(View.VISIBLE);
@@ -66,11 +66,11 @@ public class SimpleActivity extends AppCompatActivity {
             @Override
             public void onPlayStateChanged(int playState, long videoDuration) {
                 if (playState == NiceVideoPlayer.STATE_PREPARED) {
-                    Mrthumb2.obtain().buffer(SimpleActivity.this, videoUrl, videoDuration, Mrthumb2.Default.COUNT);
+                    Mrthumb.obtain().buffer(videoUrl, videoDuration, Mrthumb.Default.COUNT);
                 }
             }
         });
-        Mrthumb2.obtain().addProcessListener(new ProcessListener() {
+        Mrthumb.obtain().addProcessListener(new ProcessListener() {
 
             @Override
             public void onProcess(final int index, final int cacheCount, final int maxCount, final long time, final long duration) {
@@ -97,6 +97,6 @@ public class SimpleActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         delegate.onDestroy();
-        Mrthumb2.obtain().release();
+        Mrthumb.obtain().release();
     }
 }
