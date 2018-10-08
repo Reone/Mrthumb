@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.reone.mrthumb.Mrthumb;
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
 import com.reone.tbufferlib.BuildConfig;
@@ -27,8 +28,6 @@ public class ThumbThread {
     private Map<String, String> mHeaders;
     private DispersionBufferList thumbnailDispersions;
     private ProcessListener processListener;
-    private boolean dispersionBuffer = true;
-    private boolean enable = true;
 
     public ThumbThread(int maxSize) {
         this.maxSize = maxSize;
@@ -81,8 +80,8 @@ public class ThumbThread {
                     mmr.setDataSource(mUrl, mHeaders);
                 }
                 mmr.extractMetadata(MediaMetadataRetrieverCompat.METADATA_KEY_DURATION);
-                if (enable) {
-                    if (dispersionBuffer) {
+                if (Mrthumb.obtain().isEnable()) {
+                    if (Mrthumb.obtain().isDispersionBuffer()) {
                         dispersionBuffer();
                     } else {
                         orderBuffer();
@@ -109,7 +108,7 @@ public class ThumbThread {
      */
     public Bitmap getThumbnail(float percentage) {
         Bitmap bitmap = null;
-        if (dispersionBuffer) {
+        if (Mrthumb.obtain().isDispersionBuffer()) {
             bitmap = getDispersionThumbnail(percentage);
         } else {
             bitmap = getOrderBitmap(percentage);

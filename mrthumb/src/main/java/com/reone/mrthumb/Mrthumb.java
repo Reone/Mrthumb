@@ -2,9 +2,9 @@ package com.reone.mrthumb;
 
 import android.graphics.Bitmap;
 
-import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.core.MrthumbPool;
 import com.reone.mrthumb.core.RetrieverType;
+import com.reone.mrthumb.listener.ProcessListener;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,6 +16,8 @@ import java.util.Map;
 public class Mrthumb {
     private ArrayList<ProcessListener> listenerList = new ArrayList<>();
     private MrthumbPool mrthumbPool;
+    private boolean dispersionBuffer = true;
+    private boolean enable = true;
     private static Mrthumb mInstance = null;
 
     public static Mrthumb obtain() {
@@ -100,6 +102,23 @@ public class Mrthumb {
 
     public void addProcessListener(ProcessListener processListener) {
         listenerList.add(processListener);
+    }
+
+    public boolean isDispersionBuffer() {
+        return dispersionBuffer;
+    }
+
+    public Mrthumb dispersion(boolean dispersionBuffer) {
+        this.dispersionBuffer = dispersionBuffer;
+        return this;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
     public static class Default {

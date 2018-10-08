@@ -75,7 +75,7 @@ public class SimpleActivity extends AppCompatActivity {
             public void onPlayStateChanged(int playState, long videoDuration) {
                 if (playState == NiceVideoPlayer.STATE_PREPARED) {
                     //视频准备好后开始加载缩略图
-                    Mrthumb.obtain().buffer(videoUrl, videoDuration, Mrthumb.Default.COUNT);
+                    Mrthumb.obtain().dispersion(true).buffer(videoUrl, videoDuration, Mrthumb.Default.COUNT);
 //                    更详细的可以调用如下方法
 //                    Mrthumb.obtain().buffer(videoUrl, null, videoDuration, Mrthumb.Default.RETRIEVER_TYPE, Mrthumb.Default.COUNT, Mrthumb.Default.THUMBNAIL_WIDTH, Mrthumb.Default.THUMBNAIL_HEIGHT);
                 }
