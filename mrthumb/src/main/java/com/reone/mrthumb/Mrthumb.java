@@ -3,7 +3,6 @@ package com.reone.mrthumb;
 import android.graphics.Bitmap;
 
 import com.reone.mrthumb.listener.ProcessListener;
-import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
 import com.reone.mrthumb.tools.MrthumbPool;
 
 import java.util.ArrayList;
@@ -57,8 +56,7 @@ public class Mrthumb {
     public void buffer(String url, Map<String, String> headers, long videoDuration, @RetrieverType int retrieverType, int count, int thumbnailWidth, int thumbnailHeight) {
         try {
             initMrthumbPool(count);
-            MediaMetadataRetrieverCompat mmr = new MediaMetadataRetrieverCompat(retrieverType);
-            mrthumbPool.setMediaMedataRetriever(mmr, videoDuration);
+            mrthumbPool.setMediaMedataRetriever(retrieverType, videoDuration);
             mrthumbPool.execute(url, headers, thumbnailWidth, thumbnailHeight);
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,6 +2,7 @@ package com.reone.mrthumb.tools;
 
 import android.graphics.Bitmap;
 
+import com.reone.mrthumb.RetrieverType;
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.process.ThumbThread;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
@@ -18,7 +19,8 @@ public class MrthumbPool {
         thumbnailBuffer = new ThumbThread(count);
     }
 
-    public void setMediaMedataRetriever(MediaMetadataRetrieverCompat mmr, long videoDuration) {
+    public void setMediaMedataRetriever(@RetrieverType int retrieverType, long videoDuration) {
+        MediaMetadataRetrieverCompat mmr = new MediaMetadataRetrieverCompat(retrieverType);
         thumbnailBuffer.setMediaMedataRetriever(mmr, videoDuration);
     }
 
