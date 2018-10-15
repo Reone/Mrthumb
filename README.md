@@ -1,6 +1,9 @@
 # 拇指先生 Mrthumb
 [![](https://jitpack.io/v/Reone/Mrthumb.svg)](https://jitpack.io/#Reone/Mrthumb)
 
+## 预览图
+![img](https://github.com/Reone/Mrthumb/blob/master/simple/preview.gif)
+
 ## 库说明
 - a simple easy video thumbnail provider
 - 顺滑的获取视频缩略图
