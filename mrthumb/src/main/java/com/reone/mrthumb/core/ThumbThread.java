@@ -29,7 +29,7 @@ public class ThumbThread {
     private DispersionBufferList thumbnailDispersions;
     private ProcessListener processListener;
 
-    public ThumbThread(int maxSize) {
+    ThumbThread(int maxSize) {
         this.maxSize = maxSize;
         initBufferArray();
     }
@@ -103,11 +103,11 @@ public class ThumbThread {
     /**
      * 通过百分比获取缩略图
      *
-     * @param percentage
-     * @return
+     * @param percentage 选择时间点占总时长的百分比
+     * @return 缩略图
      */
     public Bitmap getThumbnail(float percentage) {
-        Bitmap bitmap = null;
+        Bitmap bitmap;
         if (Mrthumb.obtain().isDispersionBuffer()) {
             bitmap = getDispersionThumbnail(percentage);
         } else {
@@ -140,8 +140,8 @@ public class ThumbThread {
     /**
      * 顺序方式获取
      *
-     * @param percentage
-     * @return
+     * @param percentage 选择时间点占总时长的百分比
+     * @return 缩略图
      */
     private Bitmap getOrderBitmap(float percentage) {
         if (thumbnails == null) return null;

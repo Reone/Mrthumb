@@ -1,9 +1,5 @@
 package com.reone.mrthumb.core;
 
-/**
- * Created by wangxingsheng on 2018/9/27.
- */
-
 import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;
