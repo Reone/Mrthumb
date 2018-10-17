@@ -1,4 +1,4 @@
-package com.reone.mrthumb.core;
+package com.reone.mrthumb.type;
 
 import android.support.annotation.IntDef;
 

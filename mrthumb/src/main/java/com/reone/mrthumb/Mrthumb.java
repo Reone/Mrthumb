@@ -2,7 +2,7 @@ package com.reone.mrthumb;
 
 import android.graphics.Bitmap;
 
-import com.reone.mrthumb.core.RetrieverType;
+import com.reone.mrthumb.type.RetrieverType;
 import com.reone.mrthumb.core.ThumbThread;
 import com.reone.mrthumb.listener.ProcessListener;
 

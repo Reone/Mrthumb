@@ -10,11 +10,11 @@ import java.util.Collections;
  * 分散式填充与获取
  * eg:数组0~8位置上，填充顺序为 0,8 -> 4 -> 2,6 -> 1,3,5,7
  */
-public abstract class DispersionThumbCache {
+public abstract class DispersionManager {
     private int maxSize;
     private ArrayList<Integer> bufferIndex = new ArrayList<>();
 
-    protected DispersionThumbCache(int max) {
+    protected DispersionManager(int max) {
         maxSize = max;
         ThumbCache.getInstance().setCacheMax(maxSize);
     }
