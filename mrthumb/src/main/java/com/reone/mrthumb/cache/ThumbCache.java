@@ -50,7 +50,11 @@ public class ThumbCache {
 
     public void setCacheMax(int maxSize) {
         max = Math.max(max, maxSize);
-        thumbnails = Arrays.copyOf(thumbnails, max);
+        if (thumbnails == null) {
+            thumbnails = new Bitmap[max];
+        } else {
+            thumbnails = Arrays.copyOf(thumbnails, max);
+        }
     }
 
     public void release() {
