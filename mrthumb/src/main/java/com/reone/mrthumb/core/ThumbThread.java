@@ -5,6 +5,8 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.reone.mrthumb.Mrthumb;
+import com.reone.mrthumb.cache.DispersionThumbCache;
+import com.reone.mrthumb.cache.ThumbCache;
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
 import com.reone.tbufferlib.BuildConfig;
@@ -21,21 +23,19 @@ public class ThumbThread {
     private int cacheCount;
     private int thumbnailWidth;
     private int thumbnailHeight;
-    private Bitmap[] thumbnails;
-    private Bitmap lastThumbnail;
     private long duration;
     private String mUrl;
     private Map<String, String> mHeaders;
-    private DispersionBufferList thumbnailDispersions;
+    private DispersionThumbCache dispersionThumbCache;
     private ProcessListener processListener;
 
-    ThumbThread(int maxSize) {
+    public ThumbThread(int maxSize) {
         this.maxSize = maxSize;
         initBufferArray();
     }
 
-    public void setMediaMedataRetriever(MediaMetadataRetrieverCompat mmr, long duration) {
-        this.mmr = mmr;
+    public void setMediaMedataRetriever(@RetrieverType int retrieverType, long duration) {
+        this.mmr = new MediaMetadataRetrieverCompat(retrieverType);
         this.duration = duration;
         log("ThumbnailBuffer mmr = " + mmr + " duration = " + duration);
     }
@@ -64,7 +64,7 @@ public class ThumbThread {
      * 初始化buffer数组
      */
     private void initBufferArray() {
-        thumbnails = new Bitmap[maxSize];
+        ThumbCache.getInstance().setCacheMax(maxSize);
         initThumbnailDispersions(maxSize);
     }
 
@@ -122,12 +122,12 @@ public class ThumbThread {
      */
     private void orderBuffer() {
         for (int i = 0; i < maxSize; i++) {
-            if (thumbnails == null || thumbnails[i] != null) return;
+            if (ThumbCache.getInstance().hasThumbnail(i)) return;
             try {
                 long time = i * duration / maxSize;
-                lastThumbnail = mmr.getScaledFrameAtTime(time * 1000, MediaMetadataRetrieverCompat.OPTION_CLOSEST,
+                Bitmap thumbnail = mmr.getScaledFrameAtTime(time * 1000, MediaMetadataRetrieverCompat.OPTION_CLOSEST,
                         thumbnailWidth, thumbnailHeight);
-                thumbnails[i] = lastThumbnail;
+                ThumbCache.getInstance().set(i, thumbnail);
                 log("ThumbnailBuffer order buffer i = " + i);
                 if (processListener != null) {
                     processListener.onProcess(i, ++cacheCount, maxSize, time, duration);
@@ -144,22 +144,17 @@ public class ThumbThread {
      * @return 缩略图
      */
     private Bitmap getOrderBitmap(float percentage) {
-        if (thumbnails == null) return null;
         int index = (int) ((maxSize - 1) * percentage);
-        Bitmap bitmap = thumbnails[index];
         log("ThumbnailBuffer percentage = " + percentage + " index = " + index);
-        if (bitmap == null) {
-            bitmap = lastThumbnail;
-        }
-        return bitmap;
+        return ThumbCache.getInstance().get(index);
     }
 
     /**
      * 分散填充缩略图
      */
     private void dispersionBuffer() {
-        if (thumbnailDispersions != null) {
-            thumbnailDispersions.start();
+        if (dispersionThumbCache != null) {
+            dispersionThumbCache.start();
         }
     }
 
@@ -167,16 +162,16 @@ public class ThumbThread {
      * 分散获取缩略图
      */
     private Bitmap getDispersionThumbnail(float percentage) {
-        if (thumbnailDispersions == null) return null;
+        if (dispersionThumbCache == null) return null;
         int index = (int) ((maxSize - 1) * percentage);
-        return (Bitmap) thumbnailDispersions.get(index);
+        return dispersionThumbCache.get(index);
     }
 
     /**
      * 初始化分散式缩略图数组
      */
     private void initThumbnailDispersions(final int maxSize) {
-        thumbnailDispersions = new DispersionBufferList<Bitmap>(maxSize) {
+        dispersionThumbCache = new DispersionThumbCache(maxSize) {
             @Override
             public Bitmap getIndex(int index) {
                 Bitmap bitmap = null;
@@ -199,29 +194,10 @@ public class ThumbThread {
         if (initThread != null) {
             initThread.interrupt();
         }
-        if (thumbnails != null) {
-            try {
-                for (Bitmap bitmap : thumbnails) {
-                    if (bitmap != null) {
-                        bitmap.recycle();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            thumbnails = null;
-        }
-        if (lastThumbnail != null) {
-            try {
-                lastThumbnail.recycle();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            lastThumbnail = null;
-        }
-        if (thumbnailDispersions != null) {
-            thumbnailDispersions.release();
-            thumbnailDispersions = null;
+        ThumbCache.getInstance().release();
+        if (dispersionThumbCache != null) {
+            dispersionThumbCache.release();
+            dispersionThumbCache = null;
         }
         mUrl = null;
         mHeaders = null;

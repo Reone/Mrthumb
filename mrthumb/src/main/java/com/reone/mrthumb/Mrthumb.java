@@ -2,8 +2,8 @@ package com.reone.mrthumb;
 
 import android.graphics.Bitmap;
 
-import com.reone.mrthumb.core.MrthumbPool;
 import com.reone.mrthumb.core.RetrieverType;
+import com.reone.mrthumb.core.ThumbThread;
 import com.reone.mrthumb.listener.ProcessListener;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class Mrthumb {
     private ArrayList<ProcessListener> listenerList = new ArrayList<>();
-    private MrthumbPool mrthumbPool;
+    private ThumbThread thumbThread;
     private boolean dispersionBuffer = true;
     private boolean enable = true;
     private static Mrthumb mInstance = null;
@@ -59,17 +59,17 @@ public class Mrthumb {
     public void buffer(String url, Map<String, String> headers, long videoDuration, @RetrieverType int retrieverType, int count, int thumbnailWidth, int thumbnailHeight) {
         try {
             initMrthumbPool(count);
-            mrthumbPool.setMediaMedataRetriever(retrieverType, videoDuration);
-            mrthumbPool.execute(url, headers, thumbnailWidth, thumbnailHeight);
+            thumbThread.setMediaMedataRetriever(retrieverType, videoDuration);
+            thumbThread.execute(url, headers, thumbnailWidth, thumbnailHeight);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void initMrthumbPool(int count) {
-        if (mrthumbPool == null) {
-            mrthumbPool = new MrthumbPool(count);
-            mrthumbPool.setProcessListener(new ProcessListener() {
+        if (thumbThread == null) {
+            thumbThread = new ThumbThread(count);
+            thumbThread.setProcessListener(new ProcessListener() {
                 @Override
                 public void onProcess(int index, int cacheCount, int maxCount, long time, long duration) {
                     for (ProcessListener listener : listenerList) {
@@ -87,15 +87,15 @@ public class Mrthumb {
      * @return 缩略图
      */
     public Bitmap getThumbnail(float percentage) {
-        if (mrthumbPool != null) {
-            return mrthumbPool.getThumbnail(percentage);
+        if (thumbThread != null) {
+            return thumbThread.getThumbnail(percentage);
         }
         return null;
     }
 
     public void release() {
-        if (mrthumbPool != null) {
-            mrthumbPool.release();
+        if (thumbThread != null) {
+            thumbThread.release();
         }
         listenerList.clear();
     }
