@@ -2,16 +2,28 @@ package com.reone.mrthumb.process;
 
 import android.graphics.Bitmap;
 
+import com.reone.mrthumb.listener.ThumbProvider;
+
 /**
  * Created by wangxingsheng on 2018/10/17.
  * desc: 缓存程序
  */
-public interface CacheProcess {
-    void start();
+public abstract class CacheProcess {
+    int maxSize;
+    private ThumbProvider thumbProvider;
 
-    void stop();
+    public CacheProcess(ThumbProvider thumbProvider) {
+        this.thumbProvider = thumbProvider;
+        this.maxSize = thumbProvider.maxSize();
+    }
 
-    void pause();
+    public ThumbProvider getThumbProvider() {
+        return thumbProvider;
+    }
 
-    Bitmap get();
+    abstract void start();
+
+    abstract Bitmap get(int index);
+
+    abstract void release();
 }
