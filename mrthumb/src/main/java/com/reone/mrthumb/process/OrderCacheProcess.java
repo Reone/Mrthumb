@@ -16,7 +16,7 @@ public class OrderCacheProcess extends CacheProcess {
     }
 
     @Override
-    void start() {
+    public void start() {
         for (int i = 0; i < maxSize; i++) {
             if (ThumbCache.getInstance().hasThumbnail(i)) return;
             try {
@@ -28,12 +28,12 @@ public class OrderCacheProcess extends CacheProcess {
     }
 
     @Override
-    Bitmap get(int index) {
+    public Bitmap get(int index) {
         return ThumbCache.getInstance().get(index);
     }
 
     @Override
-    void release() {
+    public void release() {
         ThumbCache.getInstance().release();
     }
 }

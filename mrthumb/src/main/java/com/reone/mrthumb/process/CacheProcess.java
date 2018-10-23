@@ -21,9 +21,9 @@ public abstract class CacheProcess {
         return thumbProvider;
     }
 
-    abstract void start();
+    public abstract void start();
 
-    abstract Bitmap get(int index);
+    public abstract Bitmap get(int index);
 
-    abstract void release();
+    public abstract void release();
 }
