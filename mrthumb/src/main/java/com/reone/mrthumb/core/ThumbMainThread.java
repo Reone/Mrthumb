@@ -135,7 +135,9 @@ public class ThumbMainThread {
         if (initThread != null) {
             initThread.interrupt();
         }
-        process.release();
+        if (process != null) {
+            process.release();
+        }
         mUrl = null;
         mHeaders = null;
     }
