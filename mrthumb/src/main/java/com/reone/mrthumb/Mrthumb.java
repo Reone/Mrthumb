@@ -123,7 +123,7 @@ public class Mrthumb {
 
     public static class Default {
         public static final int COUNT = 100;
-        public static final int RETRIEVER_TYPE = RetrieverType.RETRIEVER_FFMPEG;
+        public static final int RETRIEVER_TYPE = RetrieverType.RETRIEVER_ANDROID;
         public static final int THUMBNAIL_WIDTH = 320;
         public static final int THUMBNAIL_HEIGHT = 180;
     }

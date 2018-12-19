@@ -5,6 +5,7 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.reone.mrthumb.Mrthumb;
+import com.reone.mrthumb.cache.ThumbCache;
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.listener.ThumbProvider;
 import com.reone.mrthumb.process.CacheProcess;
@@ -34,6 +35,7 @@ public class ThumbMainThread {
 
     public ThumbMainThread(int maxSize) {
         this.maxSize = maxSize;
+        ThumbCache.getInstance().setCacheMax(maxSize);
     }
 
     public void setMediaMedataRetriever(@RetrieverType int retrieverType, long duration) {
