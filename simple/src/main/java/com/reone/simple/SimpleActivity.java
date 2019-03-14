@@ -45,6 +45,7 @@ public class SimpleActivity extends AppCompatActivity {
     FrameLayout videoLoading;
 
     protected static final String videoUrl = "http://domhttp.kksmg.com/2018/05/23/ocj_800k_037c50e5c82010c7c57c9f1935462f9c.mp4";
+    //本demo意在展示Mrthumb的使用，所以将无关的操作放在了delegate中
     private SimpleActivityDelegate delegate;
 
     @Override
