@@ -2,7 +2,7 @@
 [![](https://jitpack.io/v/Reone/Mrthumb.svg)](https://jitpack.io/#Reone/Mrthumb)
 
 ## 预览图
-![img](https://github.com/Reone/Mrthumb/blob/master/simple/preview.gif)
+![img](https://raw.githubusercontent.com/Reone/Mrthumb/master/simple/preview.gif)
 
 ## 库说明
 - a simple easy video thumbnail provider
