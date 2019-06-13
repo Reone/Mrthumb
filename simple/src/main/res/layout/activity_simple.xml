@@ -95,8 +95,8 @@
             android:background="@drawable/bottom_cover"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingBottom="3dp"
-            android:paddingRight="10dp">
+            android:paddingRight="10dp"
+            android:paddingBottom="3dp">
             <!-- 播放暂停 -->
             <FrameLayout
                 android:layout_width="55dp"
@@ -139,6 +139,12 @@
         </LinearLayout>
 
     </com.reone.simple.view.FiexedLayout>
+
+    <com.reone.simple.view.ProgressView
+        android:id="@+id/progress_view"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_margin="10dp" />
 
     <TextView
         android:id="@+id/tv_thumb_log_area"

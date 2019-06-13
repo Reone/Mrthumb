@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.reone.mrthumb.Mrthumb;
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.simple.player.NiceVideoPlayer;
+import com.reone.simple.view.ProgressView;
 import com.reone.simple.view.VideoSeekBar;
 
 import butterknife.BindView;
@@ -19,6 +20,7 @@ import butterknife.ButterKnife;
 
 public class SimpleActivity extends AppCompatActivity {
 
+    protected static final String videoUrl = "http://domhttp.kksmg.com/2018/05/23/ocj_800k_037c50e5c82010c7c57c9f1935462f9c.mp4";
     @BindView(R.id.frame_video)
     FrameLayout frameVideo;
     @BindView(R.id.img_preview)
@@ -43,8 +45,8 @@ public class SimpleActivity extends AppCompatActivity {
     AppCompatImageView btnZoomOut;
     @BindView(R.id.video_loading)
     FrameLayout videoLoading;
-
-    protected static final String videoUrl = "http://domhttp.kksmg.com/2018/05/23/ocj_800k_037c50e5c82010c7c57c9f1935462f9c.mp4";
+    @BindView(R.id.progress_view)
+    ProgressView progressView;
     //本demo意在展示Mrthumb的使用，所以将无关的操作放在了delegate中
     private SimpleActivityDelegate delegate;
 
@@ -76,7 +78,9 @@ public class SimpleActivity extends AppCompatActivity {
             public void onPlayStateChanged(int playState, long videoDuration) {
                 if (playState == NiceVideoPlayer.STATE_PREPARED) {
                     //视频准备好后开始加载缩略图
-                    Mrthumb.obtain().dispersion(true).buffer(videoUrl, videoDuration, Mrthumb.Default.COUNT);
+                    Mrthumb.obtain()
+                            .dispersion(true)//todo: 合理可以设置是否采用分散加载，分散加载的好处是可以在滑动的时候有较大的变化
+                            .buffer(videoUrl, videoDuration, Mrthumb.Default.COUNT);
 //                    更详细的可以调用如下方法
 //                    Mrthumb.obtain().buffer(videoUrl, null, videoDuration, Mrthumb.Default.RETRIEVER_TYPE, Mrthumb.Default.COUNT, Mrthumb.Default.THUMBNAIL_WIDTH, Mrthumb.Default.THUMBNAIL_HEIGHT);
                 }
@@ -87,6 +91,13 @@ public class SimpleActivity extends AppCompatActivity {
             @Override
             public void onProcess(final int index, final int cacheCount, final int maxCount, final long time, final long duration) {
                 if (delegate != null) {
+                    progressView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressView.process(index, cacheCount, maxCount, time, duration);
+                        }
+                    });
+
                     delegate.thumbProcessLog("cache " + time / 1000 + "s at " + index + " process:" + (cacheCount * 100 / maxCount) + "%");
                 }
             }
