@@ -31,7 +31,7 @@ allprojects {
 ```
 ```groovy
 dependencies {
-    implementation 'com.github.Reone:Mrthumb:v1.0.2'
+    implementation 'com.github.Reone:Mrthumb:v1.1.0'
 }
 ```
 
