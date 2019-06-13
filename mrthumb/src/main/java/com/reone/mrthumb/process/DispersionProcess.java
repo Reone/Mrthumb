@@ -22,9 +22,11 @@ public class DispersionProcess extends CacheProcess {
     @Override
     public void start() {
         int base = 1;
+        ThumbCache.getInstance().set(0, getThumbProvider().getIndex(0));
+        bufferIndex.add(0);
         while (base < maxSize) {
             int step = ((maxSize - 1) / base);
-            int i = 0;
+            int i = step;
             while (i < maxSize) {
                 if (!ThumbCache.getInstance().hasThumbnail(i)) {
                     ThumbCache.getInstance().set(i, getThumbProvider().getIndex(i));

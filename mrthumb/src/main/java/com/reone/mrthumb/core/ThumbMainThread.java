@@ -113,6 +113,9 @@ public class ThumbMainThread {
                 log("ThumbnailBuffer dispersions record buffer i = " + index + " at time:" + time);
                 bitmap = mmr.getScaledFrameAtTime(time * 1000, MediaMetadataRetrieverCompat.OPTION_CLOSEST,
                         thumbnailWidth, thumbnailHeight);
+                if(bitmap == null){
+                    log("ThumbnailBuffer dispersions record buffer i = " + index + " is null");
+                }
                 if (processListener != null) {
                     processListener.onProcess(index, ++cacheCount, maxSize, time, duration);
                 }
