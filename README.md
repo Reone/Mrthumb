@@ -2,8 +2,8 @@
 [![](https://jitpack.io/v/Reone/Mrthumb.svg)](https://jitpack.io/#Reone/Mrthumb)
 
 ## 预览图
-![img](https://raw.githubusercontent.com/Reone/Mrthumb/master/simple/preview.gif)
-
+<img src="https://raw.githubusercontent.com/Reone/Mrthumb/master/simple/preview.gif"  height="580" width="320">
+<img src="https://raw.githubusercontent.com/Reone/Mrthumb/master/simple/preview2.gif"  height="580" width="320">
 ## 库说明
 - a simple easy video thumbnail provider
 - 顺滑的获取视频缩略图
