@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.reone.mrthumb.BaseThumbManager;
-import com.reone.mrthumb.cache.ThumbCache;
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.listener.ThumbProvider;
 import com.reone.mrthumb.process.CacheProcess;
@@ -32,7 +31,6 @@ public class DefaultThumbManager extends BaseThumbManager {
 
     public DefaultThumbManager(int maxSize) {
         super(maxSize);
-        ThumbCache.getInstance().setCacheMax(maxSize);
     }
 
     public void setMediaMedataRetriever(@RetrieverType int retrieverType, long duration) {
