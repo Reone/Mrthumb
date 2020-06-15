@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.listener.ThumbProvider;
-import com.reone.mrthumb.process.CacheProcess;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
 import com.reone.mrthumb.type.RetrieverType;
 import com.reone.tbufferlib.BuildConfig;
@@ -60,11 +59,6 @@ public class DefaultThumbManager extends BaseThumbManager {
             mmr.setDataSource(mUrl, mHeaders);
         }
         mmr.extractMetadata(MediaMetadataRetrieverCompat.METADATA_KEY_DURATION);
-    }
-
-    @Override
-    public CacheProcess getCacheProcess() {
-        return null;
     }
 
     @Override
