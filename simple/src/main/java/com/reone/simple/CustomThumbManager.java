@@ -2,10 +2,8 @@ package com.reone.simple;
 
 import android.graphics.Bitmap;
 
-import com.reone.mrthumb.BaseThumbManager;
 import com.reone.mrthumb.listener.ThumbProvider;
-import com.reone.mrthumb.process.CacheProcess;
-import com.reone.mrthumb.process.DispersionProcess;
+import com.reone.mrthumb.manager.BaseThumbManager;
 
 /**
  * Created by wangxingsheng on 2020/6/15.
@@ -15,17 +13,7 @@ public class CustomThumbManager extends BaseThumbManager {
     public CustomThumbManager(int maxSize) {
         super(maxSize);
     }
-
-    @Override
-    protected void onThreadStart() {
-
-    }
-
-    @Override
-    public CacheProcess getCacheProcess() {
-        return new DispersionProcess(getThumbProvider());
-    }
-
+    
     @Override
     protected ThumbProvider getThumbProvider() {
         return new ThumbProvider() {

@@ -3,7 +3,6 @@ package com.reone.mrthumb.manager;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.reone.mrthumb.BaseThumbManager;
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.listener.ThumbProvider;
 import com.reone.mrthumb.process.CacheProcess;
@@ -115,4 +114,5 @@ public class DefaultThumbManager extends BaseThumbManager {
             Log.d(BaseThumbManager.class.getSimpleName(), log);
         }
     }
+
 }

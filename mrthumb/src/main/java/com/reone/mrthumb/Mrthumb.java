@@ -2,8 +2,10 @@ package com.reone.mrthumb;
 
 import android.graphics.Bitmap;
 
+import com.reone.mrthumb.creator.DefaultThumbManagerCreator;
+import com.reone.mrthumb.creator.ThumbManagerCreator;
 import com.reone.mrthumb.listener.ProcessListener;
-import com.reone.mrthumb.manager.DefaultThumbManager;
+import com.reone.mrthumb.manager.BaseThumbManager;
 import com.reone.mrthumb.type.RetrieverType;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class Mrthumb {
     private BaseThumbManager thumbManager;
     private boolean dispersionBuffer = true;
     private boolean enable = true;
+    private ThumbManagerCreator thumbManagerCreator;
 
     public static Mrthumb obtain() {
         if (mInstance == null) {
@@ -48,6 +51,11 @@ public class Mrthumb {
         this.buffer(url, headers, videoDuration, Default.RETRIEVER_TYPE, count, Default.THUMBNAIL_WIDTH, Default.THUMBNAIL_HEIGHT);
     }
 
+    public <T extends BaseThumbManager> Mrthumb manager(ThumbManagerCreator<T> thumbManagerCreator) {
+        this.thumbManagerCreator = thumbManagerCreator;
+        return this;
+    }
+
     /**
      * @param url             视频链接
      * @param headers         指定头
@@ -58,42 +66,16 @@ public class Mrthumb {
      */
     public void buffer(String url, Map<String, String> headers, long videoDuration, @RetrieverType int retrieverType, int count, int thumbnailWidth, int thumbnailHeight) {
         if (thumbManager == null) {
-            thumbManager = createThumbManager(Default.COUNT, listenerList);
+            thumbManager = getThumbManagerCreator().createThumbManager(count, listenerList);
         }
-        onBuffer(url, headers, videoDuration, retrieverType, thumbnailWidth, thumbnailHeight);
+        getThumbManagerCreator().onBuffer(thumbManager, url, headers, videoDuration, retrieverType, thumbnailWidth, thumbnailHeight);
     }
 
-    /**
-     * 开始获取缓存
-     */
-    public void onBuffer(String url, Map<String, String> headers, long videoDuration, @RetrieverType int retrieverType, int thumbnailWidth, int thumbnailHeight) {
-        if (thumbManager instanceof DefaultThumbManager) {
-            ((DefaultThumbManager) thumbManager).setMediaMedataRetriever(retrieverType, videoDuration);
-            try {
-                ((DefaultThumbManager) thumbManager).execute(url, headers, thumbnailWidth, thumbnailHeight);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+    private ThumbManagerCreator getThumbManagerCreator() {
+        if (thumbManagerCreator == null) {
+            thumbManagerCreator = new DefaultThumbManagerCreator();
         }
-    }
-
-    /**
-     * 获取ThumbManager
-     *
-     * @param processListeners 添加在Mrthumb上的监听
-     * @return ThumbManager不能为空
-     */
-    public BaseThumbManager createThumbManager(int count, final ArrayList<ProcessListener> processListeners) {
-        DefaultThumbManager temp = new DefaultThumbManager(count);
-        temp.setProcessListener(new ProcessListener() {
-            @Override
-            public void onProcess(int index, int cacheCount, int maxCount, long time, long duration) {
-                for (ProcessListener listener : processListeners) {
-                    listener.onProcess(index, cacheCount, maxCount, time, duration);
-                }
-            }
-        });
-        return temp;
+        return thumbManagerCreator;
     }
 
     /**

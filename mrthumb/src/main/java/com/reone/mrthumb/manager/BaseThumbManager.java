@@ -1,9 +1,10 @@
-package com.reone.mrthumb;
+package com.reone.mrthumb.manager;
 
 import android.graphics.Bitmap;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.reone.mrthumb.Mrthumb;
 import com.reone.mrthumb.cache.ThumbCache;
 import com.reone.mrthumb.listener.ThumbProvider;
 import com.reone.mrthumb.process.CacheProcess;
@@ -25,16 +26,7 @@ public abstract class BaseThumbManager {
             onThreadStart();
             try {
                 if (Mrthumb.obtain().isEnable()) {
-                    CacheProcess customProcess = getCacheProcess();
-                    if (customProcess != null) {
-                        process = getCacheProcess();//自定义Process
-                    } else {
-                        if (Mrthumb.obtain().isDispersionBuffer()) {
-                            process = new DispersionProcess(getThumbProvider());
-                        } else {
-                            process = new OrderCacheProcess(getThumbProvider());
-                        }
-                    }
+                    process = getCacheProcess();
                     process.start();
                 }
             } catch (Exception e) {
@@ -70,9 +62,20 @@ public abstract class BaseThumbManager {
         return bitmap;
     }
 
-    protected abstract void onThreadStart();
+    protected void onThreadStart(){
 
-    public abstract CacheProcess getCacheProcess();
+    }
+
+    /**
+     * 获取缓存过程，如果返回为空，使用默认
+     */
+    public CacheProcess getCacheProcess() {
+        if (Mrthumb.obtain().isDispersionBuffer()) {
+            return new DispersionProcess(getThumbProvider());
+        } else {
+            return new OrderCacheProcess(getThumbProvider());
+        }
+    }
 
     protected abstract ThumbProvider getThumbProvider();
 
