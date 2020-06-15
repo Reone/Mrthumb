@@ -79,6 +79,13 @@ public class SimpleActivity extends AppCompatActivity {
                 if (playState == NiceVideoPlayer.STATE_PREPARED) {
                     //视频准备好后开始加载缩略图
                     Mrthumb.obtain()
+//                            自定义加载demo可以打开下方注释
+//                            .manager(new ThumbManagerCreator() {
+//                                @Override
+//                                public BaseThumbManager createThumbManager(int count, ArrayList<ProcessListener> processListeners) {
+//                                    return new CustomThumbManager(count, SimpleActivity.this);
+//                                }
+//                            })
                             .dispersion(true)//todo: 合理可以设置是否采用分散加载，分散加载的好处是可以在滑动的时候有较大的变化
                             .buffer(videoUrl, videoDuration, Mrthumb.Default.COUNT);
 //                    更详细的可以调用如下方法

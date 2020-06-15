@@ -51,7 +51,7 @@ public class Mrthumb {
         this.buffer(url, headers, videoDuration, Default.RETRIEVER_TYPE, count, Default.THUMBNAIL_WIDTH, Default.THUMBNAIL_HEIGHT);
     }
 
-    public <T extends BaseThumbManager> Mrthumb manager(ThumbManagerCreator<T> thumbManagerCreator) {
+    public Mrthumb manager(ThumbManagerCreator thumbManagerCreator) {
         this.thumbManagerCreator = thumbManagerCreator;
         return this;
     }
@@ -68,7 +68,7 @@ public class Mrthumb {
         if (thumbManager == null) {
             thumbManager = getThumbManagerCreator().createThumbManager(count, listenerList);
         }
-        getThumbManagerCreator().onBuffer(thumbManager, url, headers, videoDuration, retrieverType, thumbnailWidth, thumbnailHeight);
+        thumbManager.onBufferStart(url, headers, videoDuration, retrieverType, count, thumbnailWidth, thumbnailHeight);
     }
 
     private ThumbManagerCreator getThumbManagerCreator() {

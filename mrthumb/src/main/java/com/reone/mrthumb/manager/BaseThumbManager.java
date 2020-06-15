@@ -10,7 +10,10 @@ import com.reone.mrthumb.listener.ThumbProvider;
 import com.reone.mrthumb.process.CacheProcess;
 import com.reone.mrthumb.process.DispersionProcess;
 import com.reone.mrthumb.process.OrderCacheProcess;
+import com.reone.mrthumb.type.RetrieverType;
 import com.reone.tbufferlib.BuildConfig;
+
+import java.util.Map;
 
 /**
  * Created by wangxingsheng on 2018/5/19.
@@ -41,7 +44,7 @@ public abstract class BaseThumbManager {
         ThumbCache.getInstance().setCacheMax(maxSize);
     }
 
-    public void execute() {
+    protected void execute() {
         if (!initThread.isInterrupted()) {
             initThread.interrupt();
         }
@@ -62,7 +65,7 @@ public abstract class BaseThumbManager {
         return bitmap;
     }
 
-    protected void onThreadStart(){
+    protected void onThreadStart() {
 
     }
 
@@ -97,5 +100,19 @@ public abstract class BaseThumbManager {
     private void logBitmapSize(Bitmap bitmap) {
         if (bitmap == null) return;
         log("ThumbnailBuffer bitmap size " + bitmap.getByteCount());
+    }
+
+    /**
+     * 开始缓存回调，需要调用{@linkplain BaseThumbManager#execute()}让缓存线程启动
+     *
+     * @param url             视频链接
+     * @param headers         指定头
+     * @param videoDuration   视频时长
+     * @param retrieverType   解码器类型
+     * @param thumbnailWidth  生成缩略图宽度
+     * @param thumbnailHeight 生成缩略图高度
+     */
+    public void onBufferStart(String url, Map<String, String> headers, long videoDuration, @RetrieverType int retrieverType, int count, int thumbnailWidth, int thumbnailHeight){
+        execute();
     }
 }

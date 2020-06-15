@@ -32,19 +32,17 @@ public class DefaultThumbManager extends BaseThumbManager {
         super(maxSize);
     }
 
-    public void setMediaMedataRetriever(@RetrieverType int retrieverType, long duration) {
+    @Override
+    public void onBufferStart(String url, Map<String, String> headers, long videoDuration, @RetrieverType int retrieverType, int count, int thumbnailWidth, int thumbnailHeight) {
         this.mmr = new MediaMetadataRetrieverCompat(retrieverType);
-        this.duration = duration;
+        this.duration = videoDuration;
         log("ThumbnailBuffer mmr = " + mmr + " duration = " + duration);
-    }
-
-    public void execute(final String url, final Map<String, String> headers, int thumbnailWidth, int thumbnailHeight) throws IllegalAccessException {
         log("ThumbnailBuffer url = " + url);
         log("ThumbnailBuffer headers = " + headers);
         this.thumbnailWidth = thumbnailWidth;
         this.thumbnailHeight = thumbnailHeight;
         if (url == null || mmr == null) {
-            throw new IllegalAccessException("url or mmr is null");
+            throw new RuntimeException("url or mmr is null");
         }
         if (url.equals(mUrl)) return;
         release();
