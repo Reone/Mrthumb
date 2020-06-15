@@ -1,11 +1,16 @@
-package com.reone.mrthumb.core;
+package com.reone.mrthumb.manager;
 
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.reone.mrthumb.BaseThumbManager;
+import com.reone.mrthumb.Mrthumb;
 import com.reone.mrthumb.cache.ThumbCache;
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.listener.ThumbProvider;
+import com.reone.mrthumb.process.CacheProcess;
+import com.reone.mrthumb.process.DispersionProcess;
+import com.reone.mrthumb.process.OrderCacheProcess;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
 import com.reone.mrthumb.type.RetrieverType;
 import com.reone.tbufferlib.BuildConfig;
@@ -15,9 +20,9 @@ import java.util.Map;
 
 /**
  * Created by wangxingsheng on 2019-08-30.
- * desc:
+ * desc:执行Process
  */
-public class LocalMainThread extends BaseMainThread {
+public class DefaultThumbManager extends BaseThumbManager {
 
     private MediaMetadataRetrieverCompat mmr;
     private int cacheCount;
@@ -28,7 +33,7 @@ public class LocalMainThread extends BaseMainThread {
     private Map<String, String> mHeaders;
     private ProcessListener processListener;
 
-    public LocalMainThread(int maxSize) {
+    public DefaultThumbManager(int maxSize) {
         super(maxSize);
         ThumbCache.getInstance().setCacheMax(maxSize);
     }
@@ -56,13 +61,24 @@ public class LocalMainThread extends BaseMainThread {
     }
 
     @Override
-    protected void initThread() {
+    protected void onThreadStart() {
         if (mHeaders == null) {
             mmr.setDataSource(mUrl, new HashMap<String, String>());
         } else {
             mmr.setDataSource(mUrl, mHeaders);
         }
         mmr.extractMetadata(MediaMetadataRetrieverCompat.METADATA_KEY_DURATION);
+    }
+
+    @Override
+    public CacheProcess getCustomProcess() {
+        CacheProcess process;
+        if (Mrthumb.obtain().isDispersionBuffer()) {
+            process = new DispersionProcess(getThumbProvider());
+        } else {
+            process = new OrderCacheProcess(getThumbProvider());
+        }
+        return process;
     }
 
     @Override
@@ -107,7 +123,7 @@ public class LocalMainThread extends BaseMainThread {
 
     private void log(String log) {
         if (BuildConfig.DEBUG) {
-            Log.d(BaseMainThread.class.getSimpleName(), log);
+            Log.d(BaseThumbManager.class.getSimpleName(), log);
         }
     }
 }

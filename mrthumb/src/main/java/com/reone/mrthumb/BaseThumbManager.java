@@ -1,25 +1,42 @@
-package com.reone.mrthumb.core;
+package com.reone.mrthumb;
 
 import android.graphics.Bitmap;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.reone.mrthumb.Mrthumb;
 import com.reone.mrthumb.cache.ThumbCache;
 import com.reone.mrthumb.listener.ThumbProvider;
 import com.reone.mrthumb.process.CacheProcess;
-import com.reone.mrthumb.process.DispersionProcess;
-import com.reone.mrthumb.process.OrderCacheProcess;
 import com.reone.tbufferlib.BuildConfig;
 
 /**
  * Created by wangxingsheng on 2018/5/19.
+ * 执行Process
  */
-public abstract class BaseMainThread {
+public abstract class BaseThumbManager {
     protected int maxSize;
     private CacheProcess process;
+    private Thread initThread = new Thread("BaseMainThread") {
+        @Override
+        public void run() {
+            long startBufferTime = SystemClock.elapsedRealtime();
+            onThreadStart();
+            try {
+                if (Mrthumb.obtain().isEnable()) {
+                    CacheProcess customProcess = getCustomProcess();
+                    if (customProcess != null) {
+                        process = getCustomProcess();//自定义Process
+                    }
+                    process.start();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            log("ThumbnailBuffer end buffer at " + (SystemClock.elapsedRealtime() - startBufferTime) + "/n");
+        }
+    };
 
-    public BaseMainThread(int maxSize) {
+    public BaseThumbManager(int maxSize) {
         this.maxSize = maxSize;
         ThumbCache.getInstance().setCacheMax(maxSize);
     }
@@ -45,36 +62,15 @@ public abstract class BaseMainThread {
         return bitmap;
     }
 
-    private Thread initThread = new Thread("BaseMainThread") {
-        @Override
-        public void run() {
-            long startBufferTime = SystemClock.elapsedRealtime();
-            initThread();
-            try {
-                if (Mrthumb.obtain().isEnable()) {
-                    if (Mrthumb.obtain().isDispersionBuffer()) {
-                        process = new DispersionProcess(getThumbProvider());
-                    } else {
-                        process = new OrderCacheProcess(getThumbProvider());
-                    }
-                    process.start();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            log("ThumbnailBuffer end buffer at " + (SystemClock.elapsedRealtime() - startBufferTime) + "/n");
-        }
-    };
+    protected abstract void onThreadStart();
 
-    protected void initThread() {
-
-    }
+    public abstract CacheProcess getCustomProcess();
 
     protected abstract ThumbProvider getThumbProvider();
 
     private void log(String log) {
         if (BuildConfig.DEBUG) {
-            Log.d(BaseMainThread.class.getSimpleName(), log);
+            Log.d(BaseThumbManager.class.getSimpleName(), log);
         }
     }
 
