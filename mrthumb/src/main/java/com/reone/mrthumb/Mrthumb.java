@@ -2,7 +2,7 @@ package com.reone.mrthumb;
 
 import android.graphics.Bitmap;
 
-import com.reone.mrthumb.core.ThumbMainThread;
+import com.reone.mrthumb.core.LocalMainThread;
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.type.RetrieverType;
 
@@ -12,13 +12,14 @@ import java.util.Map;
 /**
  * Created by wangxingsheng on 2018/9/27.
  * 拇指先生
+ * 原理: 预先缓存缩略图和下标，需要时读取
  */
 public class Mrthumb {
+    private static Mrthumb mInstance = null;
     private ArrayList<ProcessListener> listenerList = new ArrayList<>();
-    private ThumbMainThread thumbThread;
+    private LocalMainThread thumbThread;
     private boolean dispersionBuffer = true;
     private boolean enable = true;
-    private static Mrthumb mInstance = null;
 
     public static Mrthumb obtain() {
         if (mInstance == null) {
@@ -68,7 +69,7 @@ public class Mrthumb {
 
     private void initMrthumbPool(int count) {
         if (thumbThread == null) {
-            thumbThread = new ThumbMainThread(count);
+            thumbThread = new LocalMainThread(count);
             thumbThread.setProcessListener(new ProcessListener() {
                 @Override
                 public void onProcess(int index, int cacheCount, int maxCount, long time, long duration) {
