@@ -17,7 +17,7 @@ import java.util.Map;
 public class Mrthumb {
     private static Mrthumb mInstance = null;
     private ArrayList<ProcessListener> listenerList = new ArrayList<>();
-    private DefaultThumbManager thumbThread;
+    private BaseThumbManager thumbManager;
     private boolean dispersionBuffer = true;
     private boolean enable = true;
 
@@ -53,32 +53,47 @@ public class Mrthumb {
      * @param headers         指定头
      * @param videoDuration   视频时长
      * @param retrieverType   解码器类型
-     * @param count           单视频生成缩略图数量
      * @param thumbnailWidth  生成缩略图宽度
      * @param thumbnailHeight 生成缩略图高度
      */
     public void buffer(String url, Map<String, String> headers, long videoDuration, @RetrieverType int retrieverType, int count, int thumbnailWidth, int thumbnailHeight) {
-        try {
-            initMrthumbPool(count);
-            thumbThread.setMediaMedataRetriever(retrieverType, videoDuration);
-            thumbThread.execute(url, headers, thumbnailWidth, thumbnailHeight);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (thumbManager == null) {
+            thumbManager = createThumbManager(Default.COUNT, listenerList);
+        }
+        onBuffer(url, headers, videoDuration, retrieverType, thumbnailWidth, thumbnailHeight);
+    }
+
+    /**
+     * 开始获取缓存
+     */
+    public void onBuffer(String url, Map<String, String> headers, long videoDuration, @RetrieverType int retrieverType, int thumbnailWidth, int thumbnailHeight) {
+        if (thumbManager instanceof DefaultThumbManager) {
+            ((DefaultThumbManager) thumbManager).setMediaMedataRetriever(retrieverType, videoDuration);
+            try {
+                ((DefaultThumbManager) thumbManager).execute(url, headers, thumbnailWidth, thumbnailHeight);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void initMrthumbPool(int count) {
-        if (thumbThread == null) {
-            thumbThread = new DefaultThumbManager(count);
-            thumbThread.setProcessListener(new ProcessListener() {
-                @Override
-                public void onProcess(int index, int cacheCount, int maxCount, long time, long duration) {
-                    for (ProcessListener listener : listenerList) {
-                        listener.onProcess(index, cacheCount, maxCount, time, duration);
-                    }
+    /**
+     * 获取ThumbManager
+     *
+     * @param processListeners 添加在Mrthumb上的监听
+     * @return ThumbManager不能为空
+     */
+    public BaseThumbManager createThumbManager(int count, final ArrayList<ProcessListener> processListeners) {
+        DefaultThumbManager temp = new DefaultThumbManager(count);
+        temp.setProcessListener(new ProcessListener() {
+            @Override
+            public void onProcess(int index, int cacheCount, int maxCount, long time, long duration) {
+                for (ProcessListener listener : processListeners) {
+                    listener.onProcess(index, cacheCount, maxCount, time, duration);
                 }
-            });
-        }
+            }
+        });
+        return temp;
     }
 
     /**
@@ -88,15 +103,15 @@ public class Mrthumb {
      * @return 缩略图
      */
     public Bitmap getThumbnail(float percentage) {
-        if (thumbThread != null) {
-            return thumbThread.getThumbnail(percentage);
+        if (thumbManager != null) {
+            return thumbManager.getThumbnail(percentage);
         }
         return null;
     }
 
     public void release() {
-        if (thumbThread != null) {
-            thumbThread.release();
+        if (thumbManager != null) {
+            thumbManager.release();
         }
         listenerList.clear();
     }

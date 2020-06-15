@@ -4,13 +4,10 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.reone.mrthumb.BaseThumbManager;
-import com.reone.mrthumb.Mrthumb;
 import com.reone.mrthumb.cache.ThumbCache;
 import com.reone.mrthumb.listener.ProcessListener;
 import com.reone.mrthumb.listener.ThumbProvider;
 import com.reone.mrthumb.process.CacheProcess;
-import com.reone.mrthumb.process.DispersionProcess;
-import com.reone.mrthumb.process.OrderCacheProcess;
 import com.reone.mrthumb.retriever.MediaMetadataRetrieverCompat;
 import com.reone.mrthumb.type.RetrieverType;
 import com.reone.tbufferlib.BuildConfig;
@@ -71,14 +68,8 @@ public class DefaultThumbManager extends BaseThumbManager {
     }
 
     @Override
-    public CacheProcess getCustomProcess() {
-        CacheProcess process;
-        if (Mrthumb.obtain().isDispersionBuffer()) {
-            process = new DispersionProcess(getThumbProvider());
-        } else {
-            process = new OrderCacheProcess(getThumbProvider());
-        }
-        return process;
+    public CacheProcess getCacheProcess() {
+        return null;
     }
 
     @Override

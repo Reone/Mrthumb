@@ -7,6 +7,8 @@ import android.util.Log;
 import com.reone.mrthumb.cache.ThumbCache;
 import com.reone.mrthumb.listener.ThumbProvider;
 import com.reone.mrthumb.process.CacheProcess;
+import com.reone.mrthumb.process.DispersionProcess;
+import com.reone.mrthumb.process.OrderCacheProcess;
 import com.reone.tbufferlib.BuildConfig;
 
 /**
@@ -23,9 +25,15 @@ public abstract class BaseThumbManager {
             onThreadStart();
             try {
                 if (Mrthumb.obtain().isEnable()) {
-                    CacheProcess customProcess = getCustomProcess();
+                    CacheProcess customProcess = getCacheProcess();
                     if (customProcess != null) {
-                        process = getCustomProcess();//自定义Process
+                        process = getCacheProcess();//自定义Process
+                    } else {
+                        if (Mrthumb.obtain().isDispersionBuffer()) {
+                            process = new DispersionProcess(getThumbProvider());
+                        } else {
+                            process = new OrderCacheProcess(getThumbProvider());
+                        }
                     }
                     process.start();
                 }
@@ -64,7 +72,7 @@ public abstract class BaseThumbManager {
 
     protected abstract void onThreadStart();
 
-    public abstract CacheProcess getCustomProcess();
+    public abstract CacheProcess getCacheProcess();
 
     protected abstract ThumbProvider getThumbProvider();
 
