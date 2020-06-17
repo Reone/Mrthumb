@@ -22,7 +22,7 @@ import java.util.Map;
 public abstract class BaseThumbManager {
     protected int maxSize;
     private CacheProcess process;
-    private Thread initThread = new Thread("BaseMainThread") {
+    private Thread initThread = new Thread("MrthumbCacheThread") {
         @Override
         public void run() {
             long startBufferTime = SystemClock.elapsedRealtime();
@@ -65,6 +65,9 @@ public abstract class BaseThumbManager {
         return bitmap;
     }
 
+    /**
+     * MrthumbCacheThread 启动回调
+     */
     protected void onThreadStart() {
 
     }
